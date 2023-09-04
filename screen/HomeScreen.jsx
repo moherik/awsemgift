@@ -1,9 +1,36 @@
-import { Text, View } from "react-native";
+import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
+import { useTheme } from "react-native-paper";
 
-export default function HomeScreen() {
+import Transaction from "../components/Transaction";
+import Report from "../components/Report";
+import Customer from "../components/Customer";
+
+const Tab = createMaterialTopTabNavigator();
+
+export default function MainScreen() {
+  const theme = useTheme();
+
   return (
-    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-      <Text>Home Screen</Text>
-    </View>
+    <Tab.Navigator
+      screenOptions={{
+        tabBarStyle: { backgroundColor: theme.colors.primaryContainer },
+      }}
+    >
+      <Tab.Screen
+        name="Transaction"
+        options={{ title: "Transaksi" }}
+        component={Transaction}
+      />
+      <Tab.Screen
+        name="Report"
+        options={{ title: "Riwayat" }}
+        component={Report}
+      />
+      <Tab.Screen
+        name="Customer"
+        options={{ title: "Pelangganku" }}
+        component={Customer}
+      />
+    </Tab.Navigator>
   );
 }
