@@ -3,7 +3,7 @@ import { useTheme } from "react-native-paper";
 
 import Transaction from "../components/Transaction";
 import Report from "../components/Report";
-import Customer from "../components/Customer";
+import Contact from "../components/Contact";
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -29,7 +29,7 @@ export default function MainScreen() {
       <Tab.Screen
         name="Customer"
         options={{ title: "Pelangganku" }}
-        component={Customer}
+        component={Contact}
       />
     </Tab.Navigator>
   );

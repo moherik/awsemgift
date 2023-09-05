@@ -16,12 +16,11 @@ import {
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
-import theme from "./theme";
+import theme from "./theme/red";
 
 import HomeScreen from "./screen/HomeScreen";
 import DetailScreen from "./screen/DetailScreen";
 import AddCustomerScreen from "./screen/AddCustomerScreen";
-import Saldo from "./components/Saldo";
 
 const { LightTheme, DarkTheme } = adaptNavigationTheme({
   reactNavigationLight: NavigationDefaultTheme,

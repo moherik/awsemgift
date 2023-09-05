@@ -10,10 +10,52 @@ import {
   useTheme,
 } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
+
 import Saldo from "./Saldo";
 
+import { FIELD_TYPE } from "../constants";
+
 const data = [
-  { title: "PDAM", icon: "water", pinned: true, id: 1 },
+  {
+    title: "PDAM",
+    icon: "water",
+    pinned: true,
+    id: 1,
+    form: {
+      fields: [
+        {
+          label: "Pilih PDAM",
+          name: "idpel2",
+          placeholder: "Masukkan Nomor Pelanggan  ",
+          info: "Masukkan nomor pelanggan",
+          contentType: "select",
+          type: FIELD_TYPE.SELECT_OPTION,
+          data: [
+            {
+              label: "PDAM Surabaya",
+              value: "PDAMSBY",
+            },
+            {
+              label: "PDAM Lamongan",
+              value: "PDAMLMG",
+            },
+          ],
+        },
+        {
+          label: "Nomor Pelanggan",
+          name: "idpel1",
+          placeholder: "Masukkan Nomor Pelanggan  ",
+          info: "Masukkan nomor pelanggan",
+          type: FIELD_TYPE.TEXT_INPUT_ID,
+        },
+      ],
+      submit: {
+        label: "Cek Tagihan",
+        icon: "check-bold",
+        type: "inq",
+      },
+    },
+  },
   {
     title: "PLN Prabayar (Token)",
     icon: "lightning-bolt",
@@ -57,7 +99,6 @@ export default function Transaction() {
       keyExtractor={(item) => item.id}
       ListHeaderComponent={
         <>
-          <Saldo />
           <TextInput
             value={searchText}
             onChangeText={(text) => setSearchText(text)}
@@ -70,6 +111,7 @@ export default function Transaction() {
               />
             }
           />
+          <Saldo />
         </>
       }
       stickyHeaderIndices={[0]}

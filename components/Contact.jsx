@@ -22,7 +22,7 @@ const data = [
   },
 ];
 
-export default function Customer() {
+export default function Contact() {
   const [isExtended, setIsExtended] = useState(true);
 
   const theme = useTheme();
