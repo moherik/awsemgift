@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "237977510276",
+    "project_id": "awsempay",
+    "storage_bucket": "awsempay.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:237977510276:android:3cb7e0bb9d71af0d317dd1",
+        "android_client_info": {
+          "package_name": "com.emas.awsempay"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "237977510276-dej9emqk6jj5fis05tsadp05jusg8q5a.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.emas.awsempay",
+            "certificate_hash": "ba03931280dc1494fe580059c251b8fb21c228f6"
+          }
+        },
+        {
+          "client_id": "237977510276-56ls4jrp4ct0ac7ck90b7jcnoq2skvmc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDm7LNrzcZlk0pfqT8ewlqRBMwNQbsSoRs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "237977510276-56ls4jrp4ct0ac7ck90b7jcnoq2skvmc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
