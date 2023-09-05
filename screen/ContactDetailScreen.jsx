@@ -1,10 +1,10 @@
 import { View } from "react-native";
 import { Text } from "react-native-paper";
 
-export default function AddCustomerScreen({ route, navigation }) {
+export default function ContactDetailScreen() {
   return (
     <View>
-      <Text>Hello World</Text>
+      <Text>Detail Kontak</Text>
     </View>
   );
 }

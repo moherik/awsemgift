@@ -1,3 +1,4 @@
+import { useNavigation } from "@react-navigation/native";
 import { StyleSheet, View } from "react-native";
 import {
   Avatar,
@@ -8,31 +9,31 @@ import {
   TouchableRipple,
   useTheme,
 } from "react-native-paper";
-import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 export default function Saldo() {
   const theme = useTheme();
+  const navigation = useNavigation();
 
   const menus = [
     {
       label: "Akun",
       icon: "account",
-      onPress: () => {},
+      onPress: () => navigation.navigate('Account'),
     },
     {
       label: "Transfer",
       icon: "swap-vertical-bold",
-      onPress: () => {},
+      onPress: () => navigation.navigate('TransferSaldo'),
     },
     {
       label: "Tarik Tunai",
       icon: "account-cash",
-      onPress: () => {},
+      onPress: () => navigation.navigate('Cashout'),
     },
     {
       label: "Scan QR",
       icon: "qrcode-scan",
-      onPress: () => {},
+      onPress: () => navigation.navigate('ScanQR'),
     },
   ];
 
@@ -73,7 +74,7 @@ export default function Saldo() {
           <Button
             icon="plus-box"
             mode="contained"
-            onPress={() => console.log("Pressed")}
+            onPress={() => navigation.navigate('Topup')}
           >
             Topup
           </Button>

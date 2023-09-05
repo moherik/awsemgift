@@ -19,8 +19,15 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import theme from "./theme/red";
 
 import HomeScreen from "./screen/HomeScreen";
-import DetailScreen from "./screen/DetailScreen";
-import AddCustomerScreen from "./screen/AddCustomerScreen";
+import PaymentScreen from "./screen/PaymentScreen";
+import AccountScreen from "./screen/AccountScreen";
+import TopupScreen from "./screen/TopupScreen";
+import TransferSaldoScreen from "./screen/TransferSaldoScreen";
+import CashoutScreen from "./screen/CashoutScreen";
+import ScanQRScreen from "./screen/ScanQRScreen";
+import AddContactScreen from "./screen/AddContactScreen";
+import ContactDetailScreen from "./screen/ContactDetailScreen";
+import ReportDetailScreen from "./screen/ReportDetailScreen";
 
 const { LightTheme, DarkTheme } = adaptNavigationTheme({
   reactNavigationLight: NavigationDefaultTheme,
@@ -61,20 +68,55 @@ export default function App() {
                     }}
                   >
                     <Appbar.Content title={props.options.title} />
-                    <Appbar.Action icon="dots-vertical" onPress={() => {}} />
+                    <Appbar.Action icon="inbox" onPress={() => {}} />
                   </Appbar.Header>
                 ),
               }}
             />
             <Stack.Screen
-              name="Detail"
-              component={DetailScreen}
+              name="Payment"
+              component={PaymentScreen}
               options={({ route }) => ({ title: route.params.title })}
             />
             <Stack.Screen
-              name="AddCustomer"
-              component={AddCustomerScreen}
-              options={{ title: "Tambah Pelanggan" }}
+              name="AddContact"
+              component={AddContactScreen}
+              options={{ title: "Tambah Kontak" }}
+            />
+            <Stack.Screen
+              name="ContactDetail"
+              component={ContactDetailScreen}
+              options={{ title: "Detail Kontak" }}
+            />
+            <Stack.Screen
+              name="ReportDetail"
+              component={ReportDetailScreen}
+              options={{ title: "Detail Laporan" }}
+            />
+            <Stack.Screen
+              name="Account"
+              component={AccountScreen}
+              options={{ title: "Akun Saya" }}
+            />
+            <Stack.Screen
+              name="Topup"
+              component={TopupScreen}
+              options={{ title: "Topup Saldo" }}
+            />
+            <Stack.Screen
+              name="TransferSaldo"
+              component={TransferSaldoScreen}
+              options={{ title: "Transfer Saldo" }}
+            />
+            <Stack.Screen
+              name="Cashout"
+              component={CashoutScreen}
+              options={{ title: "Tarik Tunai" }}
+            />
+            <Stack.Screen
+              name="ScanQR"
+              component={ScanQRScreen}
+              options={{ title: "Scan QRCode" }}
             />
           </Stack.Navigator>
         </NavigationContainer>

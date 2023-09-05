@@ -5,6 +5,7 @@ import {
   Button,
   Divider,
   List,
+  Surface,
   Text,
   TextInput,
   useTheme,
@@ -16,6 +17,7 @@ import Saldo from "./Saldo";
 import { FIELD_TYPE } from "../constants";
 
 const data = [
+  { type: "header", label: "Favorit", id: '2000' },
   {
     title: "PDAM",
     icon: "water",
@@ -63,7 +65,7 @@ const data = [
     id: 2,
   },
   { title: "Game Online", icon: "gamepad-variant", pinned: true, id: 3 },
-  { type: "separator", id: 10000 },
+  { type: "header", label: "Semua Produk", id: '3000' },
   { title: "Pulsa & Paket Data", icon: "phone", pinned: false, id: 5 },
   { title: "E-Wallet", icon: "wallet", pinned: false, id: 6 },
 ];
@@ -91,7 +93,7 @@ export default function Transaction() {
   function handleOnClick(item) {
     Keyboard.dismiss();
 
-    navigation.navigate("Detail", { ...item });
+    navigation.navigate("Payment", { ...item });
   }
 
   return (
@@ -114,38 +116,48 @@ export default function Transaction() {
           <Saldo />
         </>
       }
-      stickyHeaderIndices={[0]}
-      renderItem={({ item }) =>
-        item.type == "separator" ? (
-          <Divider />
-        ) : (
-          <List.Item
-            title={item.title}
-            left={(props) => (
-              <Avatar.Icon
-                {...props}
-                size={32}
-                color={theme.colors.background}
-                icon={item.icon}
-              />
-            )}
-            right={(props) => (
-              <Pressable
-                onPress={() => {
-                  console.log("pin/not pin");
-                }}
-              >
-                {item.pinned ? (
-                  <List.Icon {...props} icon="pin-off" />
-                ) : (
-                  <List.Icon {...props} icon="pin" />
-                )}
-              </Pressable>
-            )}
-            onPress={() => handleOnClick(item)}
-          />
-        )
-      }
+      renderItem={({ item }) => {
+        if (item.type == "separator") {
+          return <Divider />;
+        } else if (item.type == "header") {
+          return (
+            <>
+              <View style={{ padding: 15 }}>
+                <Text>{item.label}</Text>
+              </View>
+              <Divider />
+            </>
+          );
+        } else {
+          return (
+            <List.Item
+              title={item.title}
+              left={(props) => (
+                <Avatar.Icon
+                  {...props}
+                  size={32}
+                  color={theme.colors.background}
+                  icon={item.icon}
+                />
+              )}
+              right={(props) => (
+                <Pressable
+                  onPress={() => {
+                    console.log("pin/not pin");
+                  }}
+                >
+                  {item.pinned ? (
+                    <List.Icon {...props} icon="pin-off" />
+                  ) : (
+                    <List.Icon {...props} icon="pin" />
+                  )}
+                </Pressable>
+              )}
+              onPress={() => handleOnClick(item)}
+            />
+          );
+        }
+      }}
       data={listData}
       keyboardShouldPersistTaps="handled"
       ListEmptyComponent={

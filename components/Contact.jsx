@@ -1,6 +1,6 @@
 import { useNavigation } from "@react-navigation/native";
 import { useState } from "react";
-import { FlatList, View } from "react-native";
+import { FlatList } from "react-native";
 import {
   AnimatedFAB,
   Avatar,
@@ -54,7 +54,7 @@ export default function Contact() {
                 // style={{ marginTop: 8, marginLeft: 15 }}
               />
             )}
-            onPress={() => {}}
+            onPress={() => navigation.navigate('ContactDetail')}
           />
         )}
         data={data}
@@ -65,7 +65,7 @@ export default function Contact() {
         icon="plus"
         label="Tambah"
         extended={isExtended}
-        onPress={() => navigation.navigate("AddCustomer")}
+        onPress={() => navigation.navigate("AddContact")}
         animateFrom="right"
         iconMode="dynamic"
         style={[{ bottom: 16, right: 16, position: "absolute", elevation: 1 }]}

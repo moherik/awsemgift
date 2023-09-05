@@ -1,3 +1,4 @@
+import { useNavigation } from "@react-navigation/native";
 import { FlatList, View } from "react-native";
 import { Avatar, Divider, List, Text, useTheme } from "react-native-paper";
 import Icons from "react-native-vector-icons/MaterialCommunityIcons";
@@ -23,6 +24,7 @@ const data = [
 
 export default function Report() {
   const theme = useTheme();
+  const navigation = useNavigation();
 
   return (
     <FlatList
@@ -75,7 +77,7 @@ export default function Report() {
               </Text>
             </View>
           )}
-          onPress={() => {}}
+          onPress={() => navigation.navigate('ReportDetail')}
         />
       )}
       data={data}

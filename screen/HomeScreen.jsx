@@ -27,8 +27,8 @@ export default function MainScreen() {
         component={Report}
       />
       <Tab.Screen
-        name="Customer"
-        options={{ title: "Pelangganku" }}
+        name="Contact"
+        options={{ title: "Kontak" }}
         component={Contact}
       />
     </Tab.Navigator>
