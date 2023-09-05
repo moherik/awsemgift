@@ -10,6 +10,7 @@ import {
   useTheme,
 } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
+import Saldo from "./Saldo";
 
 const data = [
   { title: "PDAM", icon: "water", pinned: true, id: 1 },
@@ -55,18 +56,21 @@ export default function Transaction() {
     <FlatList
       keyExtractor={(item) => item.id}
       ListHeaderComponent={
-        <TextInput
-          value={searchText}
-          onChangeText={(text) => setSearchText(text)}
-          label="Cari Produk"
-          style={{ backgroundColor: theme.colors.background }}
-          left={
-            <TextInput.Icon
-              icon={!searchText ? "magnify" : "close"}
-              onPress={() => setSearchText("")}
-            />
-          }
-        />
+        <>
+          <Saldo />
+          <TextInput
+            value={searchText}
+            onChangeText={(text) => setSearchText(text)}
+            label="Cari Produk"
+            style={{ backgroundColor: theme.colors.background }}
+            left={
+              <TextInput.Icon
+                icon={!searchText ? "magnify" : "close"}
+                onPress={() => setSearchText("")}
+              />
+            }
+          />
+        </>
       }
       stickyHeaderIndices={[0]}
       renderItem={({ item }) =>

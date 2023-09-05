@@ -78,7 +78,6 @@ export default function App() {
               options={{ title: "Tambah Pelanggan" }}
             />
           </Stack.Navigator>
-          <Saldo/>
         </NavigationContainer>
       </PaperProvider>
     </GestureHandlerRootView>
