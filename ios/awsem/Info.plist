@@ -33,12 +33,6 @@
       <dict>
         <key>CFBundleURLSchemes</key>
         <array>
-          <string>com.googleusercontent.apps.237977510276-qa81t6b1od7bhnoru19e0taigdh2d54j</string>
-        </array>
-      </dict>
-      <dict>
-        <key>CFBundleURLSchemes</key>
-        <array>
           <string>exp+awsem</string>
         </array>
       </dict>
