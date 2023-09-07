@@ -14,70 +14,18 @@ import { useNavigation } from "@react-navigation/native";
 
 import Saldo from "./Saldo";
 
-import { FIELD_TYPE } from "../constants";
-
-const data = [
-  { type: "header", label: "Favorit", id: '2000' },
-  {
-    title: "PDAM",
-    icon: "water",
-    pinned: true,
-    id: 1,
-    form: {
-      fields: [
-        {
-          label: "Pilih PDAM",
-          name: "idpel2",
-          placeholder: "Masukkan Nomor Pelanggan  ",
-          info: "Masukkan nomor pelanggan",
-          contentType: "select",
-          type: FIELD_TYPE.SELECT_OPTION,
-          data: [
-            {
-              label: "PDAM Surabaya",
-              value: "PDAMSBY",
-            },
-            {
-              label: "PDAM Lamongan",
-              value: "PDAMLMG",
-            },
-          ],
-        },
-        {
-          label: "Nomor Pelanggan",
-          name: "idpel1",
-          placeholder: "Masukkan Nomor Pelanggan  ",
-          info: "Masukkan nomor pelanggan",
-          type: FIELD_TYPE.TEXT_INPUT_ID,
-        },
-      ],
-      submit: {
-        label: "Cek Tagihan",
-        icon: "check-bold",
-        type: "inq",
-      },
-    },
-  },
-  {
-    title: "PLN Prabayar (Token)",
-    icon: "lightning-bolt",
-    pinned: true,
-    id: 2,
-  },
-  { title: "Game Online", icon: "gamepad-variant", pinned: true, id: 3 },
-  { type: "header", label: "Semua Produk", id: '3000' },
-  { title: "Pulsa & Paket Data", icon: "phone", pinned: false, id: 5 },
-  { title: "E-Wallet", icon: "wallet", pinned: false, id: 6 },
-];
+import { supabase } from "../lib/supabase";
 
 export default function Transaction() {
   const [searchText, setSearchText] = useState("");
-  const [listData, setListData] = useState(data);
+  const [listData, setListData] = useState([]);
 
   const theme = useTheme();
   const navigation = useNavigation();
 
   useEffect(() => {
+    const data = listData;
+
     if (searchText) {
       const newData = data.filter((val) =>
         val.title
@@ -88,6 +36,11 @@ export default function Transaction() {
     } else {
       setListData(data);
     }
+
+    supabase
+      .from("products")
+      .select()
+      .then(({ data }) => setListData(data));
   }, [searchText]);
 
   function handleOnClick(item) {
@@ -131,7 +84,7 @@ export default function Transaction() {
         } else {
           return (
             <List.Item
-              title={item.title}
+              title={item.name}
               left={(props) => (
                 <Avatar.Icon
                   {...props}

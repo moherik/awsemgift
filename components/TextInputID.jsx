@@ -19,7 +19,7 @@ export default function TextInputID({
       label={label}
       placeholder={placeholder || ""}
       onBlur={onBlur}
-      onChange={onChange}
+      onChangeText={onChange}
       style={{ backgroundColor: theme.colors.background }}
       right={<TextInput.Icon icon="account-box-multiple" onPress={() => {}} />}
     />
