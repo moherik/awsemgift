@@ -2,12 +2,15 @@ import { useNavigation } from "@react-navigation/native";
 import { View } from "react-native";
 import { Button, TextInput, useTheme } from "react-native-paper";
 import { Controller, useForm } from "react-hook-form";
+import Toast from "react-native-root-toast";
 
 import { supabase } from "../lib/supabase";
+import { useLoader } from "../components/Loader";
 
 export default function LoginScreen() {
   const theme = useTheme();
   const navigation = useNavigation();
+  const { showModal, hideModal } = useLoader();
   const { control, handleSubmit } = useForm({
     defaultValues: {
       phone: "",
@@ -16,12 +19,29 @@ export default function LoginScreen() {
   });
 
   async function onSubmit({ phone, password }) {
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email: phone,
-      password: password,
-    });
+    try {
+      showModal();
 
-    console.log(data);
+      const checkUser = await supabase
+        .from("users")
+        .select()
+        .eq("phone", phone)
+        .eq("password", password);
+
+      const userData = checkUser.data[0];
+      if (checkUser.error || userData == null) {
+        throw new Error("Terjadi Kesalahan! User tidak ditemukan");
+      }
+
+      await supabase.auth.signInWithPassword({
+        email: userData.email,
+        password: password,
+      });
+    } catch (error) {
+      Toast.show(error?.message || "Terjadi kesalahan");
+    } finally {
+      hideModal();
+    }
   }
 
   return (

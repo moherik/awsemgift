@@ -22,14 +22,14 @@ export default function MainScreen() {
         component={Transaction}
       />
       <Tab.Screen
-        name="Report"
-        options={{ title: "Riwayat" }}
-        component={Report}
-      />
-      <Tab.Screen
         name="Contact"
         options={{ title: "Kontak" }}
         component={Contact}
+      />
+      <Tab.Screen
+        name="Report"
+        options={{ title: "Riwayat" }}
+        component={Report}
       />
     </Tab.Navigator>
   );
