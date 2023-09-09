@@ -24,9 +24,6 @@ import HomeScreen from "./screen/HomeScreen";
 import PaymentScreen from "./screen/PaymentScreen";
 import AccountScreen from "./screen/AccountScreen";
 import TopupScreen from "./screen/TopupScreen";
-import TransferSaldoScreen from "./screen/TransferSaldoScreen";
-import CashoutScreen from "./screen/CashoutScreen";
-import ScanQRScreen from "./screen/ScanQRScreen";
 import AddContactScreen from "./screen/AddContactScreen";
 import ContactDetailScreen from "./screen/ContactDetailScreen";
 import ReportDetailScreen from "./screen/ReportDetailScreen";
@@ -85,7 +82,7 @@ export default function App() {
                     name="Home"
                     component={HomeScreen}
                     options={{
-                      title: "AwsemPay",
+                      title: "AwsemGift",
                       header: (props) => (
                         <Appbar.Header
                           style={{
@@ -128,21 +125,6 @@ export default function App() {
                     name="Topup"
                     component={TopupScreen}
                     options={{ title: "Topup Saldo" }}
-                  />
-                  <Stack.Screen
-                    name="TransferSaldo"
-                    component={TransferSaldoScreen}
-                    options={{ title: "Transfer Saldo" }}
-                  />
-                  <Stack.Screen
-                    name="Cashout"
-                    component={CashoutScreen}
-                    options={{ title: "Tarik Tunai" }}
-                  />
-                  <Stack.Screen
-                    name="ScanQR"
-                    component={ScanQRScreen}
-                    options={{ title: "Scan QRCode" }}
                   />
                   <Stack.Screen
                     name="Inbox"

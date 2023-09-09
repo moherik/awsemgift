@@ -18,7 +18,7 @@ export default function MainScreen() {
     >
       <Tab.Screen
         name="Transaction"
-        options={{ title: "Transaksi" }}
+        options={{ title: "Kirim" }}
         component={Transaction}
       />
       <Tab.Screen
