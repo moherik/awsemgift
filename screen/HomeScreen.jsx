@@ -1,11 +1,11 @@
-import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
+import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
 import { useTheme } from "react-native-paper";
 
 import Transaction from "../components/Transaction";
-import Report from "../components/Report";
+import Menu from "../components/Menu";
 import Contact from "../components/Contact";
 
-const Tab = createMaterialTopTabNavigator();
+const Tab = createMaterialBottomTabNavigator();
 
 export default function MainScreen() {
   const theme = useTheme();
@@ -18,18 +18,18 @@ export default function MainScreen() {
     >
       <Tab.Screen
         name="Transaction"
-        options={{ title: "Kirim" }}
+        options={{ title: "Kirim", tabBarIcon: 'gift' }}
         component={Transaction}
       />
       <Tab.Screen
         name="Contact"
-        options={{ title: "Kontak" }}
+        options={{ title: "Kontak", tabBarIcon: 'account-multiple' }}
         component={Contact}
       />
       <Tab.Screen
-        name="Report"
-        options={{ title: "Riwayat" }}
-        component={Report}
+        name="Menu"
+        options={{ title: "Menu", tabBarIcon: 'menu' }}
+        component={Menu}
       />
     </Tab.Navigator>
   );

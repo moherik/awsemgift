@@ -22,7 +22,7 @@ const data = [
   },
 ];
 
-export default function Report() {
+export default function Menu() {
   const theme = useTheme();
   const navigation = useNavigation();
 
