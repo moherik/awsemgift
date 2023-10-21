@@ -1,13 +1,15 @@
 import { useNavigation } from "@react-navigation/native";
 import { useState } from "react";
-import { FlatList } from "react-native";
+import { FlatList, View } from "react-native";
 import {
   AnimatedFAB,
   Avatar,
   Divider,
   List,
+  TextInput,
   useTheme,
 } from "react-native-paper";
+import Constants from "expo-constants";
 
 const data = [
   {
@@ -23,6 +25,7 @@ const data = [
 ];
 
 export default function Contact() {
+  const [searchText, setSearchText] = useState();
   const [isExtended, setIsExtended] = useState(true);
 
   const theme = useTheme();
@@ -38,6 +41,23 @@ export default function Contact() {
   return (
     <>
       <FlatList
+        ListHeaderComponent={
+          <View style={{ flex: 1, paddingTop: Constants.statusBarHeight }}>
+            <TextInput
+              value={searchText}
+              onChangeText={(text) => setSearchText(text)}
+              label="Cari kontak"
+              dense
+              style={{ backgroundColor: theme.colors.background }}
+              right={
+                <TextInput.Icon
+                  icon={!searchText ? "magnify" : "close"}
+                  onPress={() => setSearchText("")}
+                />
+              }
+            />
+          </View>
+        }
         keyExtractor={(item) => item.id}
         ItemSeparatorComponent={<Divider />}
         renderItem={({ item }) => (
@@ -51,10 +71,9 @@ export default function Contact() {
                 size={32}
                 color={theme.colors.background}
                 icon="account"
-                // style={{ marginTop: 8, marginLeft: 15 }}
               />
             )}
-            onPress={() => navigation.navigate('ContactDetail')}
+            onPress={() => navigation.navigate("ContactDetail")}
           />
         )}
         data={data}

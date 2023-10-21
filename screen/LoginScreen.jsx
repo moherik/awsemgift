@@ -4,7 +4,6 @@ import { Button, TextInput, useTheme } from "react-native-paper";
 import { Controller, useForm } from "react-hook-form";
 import Toast from "react-native-root-toast";
 
-import { supabase } from "../lib/supabase";
 import { useLoader } from "../components/Loader";
 
 export default function LoginScreen() {
@@ -13,30 +12,15 @@ export default function LoginScreen() {
   const { showModal, hideModal } = useLoader();
   const { control, handleSubmit } = useForm({
     defaultValues: {
-      phone: "",
+      email: "",
       password: "",
     },
   });
 
-  async function onSubmit({ phone, password }) {
+  async function onSubmit({ email, password }) {
     try {
       showModal();
 
-      const checkUser = await supabase
-        .from("users")
-        .select()
-        .eq("phone", phone)
-        .eq("password", password);
-
-      const userData = checkUser.data[0];
-      if (checkUser.error || userData == null) {
-        throw new Error("Terjadi Kesalahan! User tidak ditemukan");
-      }
-
-      await supabase.auth.signInWithPassword({
-        email: userData.email,
-        password: password,
-      });
     } catch (error) {
       Toast.show(error?.message || "Terjadi kesalahan");
     } finally {
@@ -67,12 +51,12 @@ export default function LoginScreen() {
           <Controller
             control={control}
             rules={{ required: true }}
-            name="phone"
+            name="email"
             render={({ field: { onBlur, onChange, value } }) => (
               <TextInput
                 mode="outlined"
-                textContentType="telephoneNumber"
-                label="Nomor Telepon"
+                textContentType="emailAddress"
+                label="Email"
                 value={value}
                 onBlur={onBlur}
                 onChangeText={onChange}

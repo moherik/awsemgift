@@ -4,7 +4,6 @@ import {
   Image,
   StyleSheet,
   View,
-  VirtualizedList,
 } from "react-native";
 import {
   Button,
@@ -18,7 +17,7 @@ import {
 
 const numColumns = 2;
 
-export default function ProductDetail({ item }) {
+export default function ProductDetail({ item, onClickProduct }) {
   const [selectedProduct, setselectedProduct] = useState();
 
   const theme = useTheme();
@@ -35,12 +34,12 @@ export default function ProductDetail({ item }) {
         <View style={styles.productInfo}>
           <View>
             <Text variant="titleLarge">{item.name}</Text>
-            <Text variant="labelMedium">eGift &bull; {item.category}</Text>
+            <Text variant="labelMedium">eGift &bull; {item.product_categories.name}</Text>
             <Text variant="bodyMedium" style={{ marginTop: 8 }}>
               {item.price}
             </Text>
           </View>
-          <IconButton icon="star-plus" onPress={() => {}} />
+          <IconButton icon="heart-outline" onPress={() => {}} />
         </View>
       </View>
       {item.info && (
@@ -59,7 +58,7 @@ export default function ProductDetail({ item }) {
         <FlatList
           scrollEnabled={false}
           numColumns={numColumns}
-          keyExtractor={(item) => item.key}
+          keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
             <View style={styles.productItem}>
               <TouchableRipple
@@ -67,24 +66,27 @@ export default function ProductDetail({ item }) {
                 style={{
                   ...styles.productItemWrapper,
                   backgroundColor:
-                    selectedProduct?.key == item.key
+                    selectedProduct?.id == item.id
                       ? theme.colors.primaryContainer
                       : null,
                   borderColor:
-                    selectedProduct?.key == item.key
+                    selectedProduct?.id == item.id
                       ? theme.colors.primary
                       : theme.colors.primaryContainer,
                 }}
-                onPress={() => setselectedProduct(item)}
+                onPress={() => {
+                  setselectedProduct(item);
+                  onClickProduct();
+                }}
               >
                 <View style={{ display: "flex" }}>
-                  <Text variant="bodySmall">{item.name}</Text>
+                  <Text variant="bodySmall" lineBreakMode="tail" numberOfLines={1}>{item.name}</Text>
                   <Text variant="bodyMedium">{item.price}</Text>
                 </View>
               </TouchableRipple>
             </View>
           )}
-          data={item.item}
+          data={item.products}
         />
       </View>
       {selectedProduct && (

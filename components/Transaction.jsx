@@ -4,10 +4,12 @@ import {
   FlatList,
   Image,
   Keyboard,
+  ScrollView,
   StyleSheet,
   View,
 } from "react-native";
 import {
+  Appbar,
   Chip,
   Divider,
   Text,
@@ -21,95 +23,18 @@ import { BottomSheetModal, BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import CustomBackdrop from "./CustomBackdrop";
 import ProductDetail from "./ProductDetail";
 
-const data = [
-  {
-    id: 1,
-    name: "AOV",
-    logo: "https://storage.googleapis.com/unipin-assets/images/icon_direct_topup_games/1549880449-icon-1540269306-icon-aov.png",
-    cover:
-      "https://games.lol/wp-content/uploads/2021/06/garena-aov-pc-full-version.jpg",
-    color: "#03A9F4",
-    price: "Rp10.000 - Rp550.000",
-    category: "Game Online",
-  },
-  {
-    id: 2,
-    name: "Netflix",
-    logo: "https://storage.googleapis.com/static-sbf/fastpay_mobile/logo_produk/game/ic_netflix-min.png",
-    cover:
-      "https://cdn.eraspace.com/pub/media/mageplaza/blog/post/f/i/fiturnetflix-_primary.jpg",
-    color: "#FF5252",
-    price: "Rp10.000 - Rp1.000.000",
-    category: "Entertainment",
-  },
-  {
-    id: 3,
-    name: "Mobile Legend",
-    logo: "https://storage.googleapis.com/static-sbf/assets_fastpay/game/ic_ml.png",
-    cover:
-      "https://gamebrott.com/wp-content/uploads/2022/07/Featured-7-750x375.jpg",
-    color: "#ab47bc",
-    price: "Rp10.000 - Rp250.000",
-    category: "Game Online",
-  },
-  {
-    id: 4,
-    name: "Ragnarok",
-    logo: "https://cdn.unipin.com/images/icon_product_pages/1622191978-icon-RO-game-logo.jpg",
-    cover:
-      "https://sm.ign.com/ign_ap/screenshot/default/ragnarok-online_u5wk.jpg",
-    color: "#FFEB3B",
-    price: "Rp10.000 - Rp250.000",
-    category: "Game Online",
-    info: "Voucher Ragnarok bisa digunakan untuk melakukan topup di dalam game Ragnarok Online",
-    item: [
-      {
-        name: "Voucher Ragnarok E",
-        price: "Rp10.000",
-        key: 200,
-      },
-      {
-        name: "Voucher Ragnarok E 50",
-        price: "Rp50.000",
-        key: 201,
-      },
-      {
-        name: "Voucher Ragnarok E 100",
-        price: "Rp1-0.000",
-        key: 202,
-      },
-    ],
-  },
-  {
-    id: 5,
-    name: "Spotify",
-    logo: "https://storage.googleapis.com/static-sbf/fastpay_mobile/logo_produk/game/ic_spotify-min.png",
-    cover:
-      "https://gadgetren.com/wp-content/uploads/2023/02/Spotify-Logo-ok.jpg",
-    color: "#4CAF50",
-    price: "Rp10.000 - Rp250.000",
-    category: "Entertainment",
-  },
-];
-
-const categories = [
-  {
-    name: "Game Online",
-    key: "game-online",
-  },
-  {
-    name: "Voucher Digital",
-    key: "digital",
-  },
-];
-
+let tempData = [];
 const numColumns = 2;
-const cardHeight = Dimensions.get("window").width / numColumns;
+const cardHeight = Dimensions.get("window").width / numColumns - 20;
 
 export default function Transaction() {
-  const [searchText, setSearchText] = useState("");
-  const [listData, setListData] = useState(data);
+  const [loading, setLoading] = useState(true);
+  const [products, setProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
+
+  const [searchText, setSearchText] = useState();
   const [selectedItem, setSelectedItem] = useState();
+  const [selectedCategory, setSelectedCategory] = useState();
 
   const theme = useTheme();
   const navigation = useNavigation();
@@ -118,20 +43,38 @@ export default function Transaction() {
   const bottomSheetModalRef = useRef(null);
 
   // variables
-  const snapPoints = useMemo(() => ["80%"], []);
+  const snapPoints = useMemo(() => ["80%", "100%"], []);
+
+  async function fetchData() {
+    setLoading(true);
+    setSelectedCategory(null);
+  }
 
   useEffect(() => {
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    let filteredData = tempData;
+
     if (searchText) {
-      const newData = listData.filter((val) =>
-        val.name
-          ? val.name.toLowerCase().includes(searchText.toLowerCase())
+      filteredData = filteredData.filter((product) =>
+        product.name
+          ? product.name.toLowerCase().includes(searchText.toLowerCase())
           : null
       );
-      setListData(newData);
-    } else {
-      setListData(data);
     }
-  }, [searchText]);
+
+    if (selectedCategory) {
+      filteredData = filteredData.filter((product) =>
+        product.product_categories
+          ? product.product_categories.id == selectedCategory.id
+          : null
+      );
+    }
+
+    setProducts(filteredData);
+  }, [searchText, selectedCategory]);
 
   function handleOnClick(item) {
     Keyboard.dismiss();
@@ -144,40 +87,70 @@ export default function Transaction() {
     bottomSheetModalRef.current?.dismiss();
   }
 
+  function handleOnClickCategory(category) {
+    if (selectedCategory?.id == category.id) {
+      setSelectedCategory(null);
+    } else {
+      setSelectedCategory(category);
+    }
+  }
+
   return (
     <>
+      <Appbar.Header
+        style={{
+          backgroundColor: theme.colors.primaryContainer,
+        }}
+      >
+        <Appbar.Content title="Awsemgift" />
+        <Appbar.Action icon="bell" onPress={() => {}} />
+      </Appbar.Header>
       <FlatList
+        refreshing={loading}
+        onRefresh={() => fetchData()}
         keyExtractor={(item) => item.id}
         ListHeaderComponent={
           <View>
             <TextInput
               value={searchText}
               onChangeText={(text) => setSearchText(text)}
-              label="Cari Produk"
+              label="Cari produk"
+              dense
               style={{ backgroundColor: theme.colors.background }}
-              left={
+              right={
                 <TextInput.Icon
                   icon={!searchText ? "magnify" : "close"}
                   onPress={() => setSearchText("")}
                 />
               }
             />
-            <View
+            <ScrollView
+              horizontal
               style={{
                 ...styles.category,
                 backgroundColor: theme.colors.background,
               }}
             >
-              {categories.map((category, index) => (
-                <Chip
-                  style={{ marginRight: 5 }}
-                  onPress={() => console.log("Pressed")}
-                  key={index}
-                >
-                  {category.name}
-                </Chip>
-              ))}
-            </View>
+              {categories &&
+                categories.map((category, index) => (
+                  <Chip
+                    style={{
+                      marginRight: 5,
+                      backgroundColor:
+                        selectedCategory?.id == category.id
+                          ? theme.colors.primaryContainer
+                          : theme.colors.background,
+                      borderColor: theme.colors.primaryContainer,
+                      borderWidth: 1,
+                    }}
+                    onPress={() => handleOnClickCategory(category)}
+                    key={index}
+                    textStyle={{ fontSize: 13, fontWeight: 400 }}
+                  >
+                    {category.name}
+                  </Chip>
+                ))}
+            </ScrollView>
             <Divider />
           </View>
         }
@@ -201,7 +174,7 @@ export default function Transaction() {
                   }}
                 >
                   <Image
-                    style={{ borderRadius: 20 }}
+                    style={{ borderRadius: 12 }}
                     source={{ uri: item.logo }}
                     width={cardHeight - 120}
                     height={cardHeight - 120}
@@ -216,16 +189,18 @@ export default function Transaction() {
           </View>
         )}
         numColumns={numColumns}
-        data={listData}
+        data={products}
         keyboardShouldPersistTaps="handled"
         ListEmptyComponent={
-          <View style={styles.emptyWrapper}>
-            <Text variant="titleMedium">Tidak ada produk</Text>
-            <Text variant="bodyMedium" style={{ textAlign: "center" }}>
-              Saat ini belum ada produk yang tersedia, atau perbaiki pencarian
-              Anda
-            </Text>
-          </View>
+          !loading && (
+            <View style={styles.emptyWrapper}>
+              <Text variant="titleMedium">Tidak ada produk</Text>
+              <Text variant="bodyMedium" style={{ textAlign: "center" }}>
+                Saat ini belum ada produk yang tersedia, atau perbaiki pencarian
+                Anda
+              </Text>
+            </View>
+          )
         }
       />
 
@@ -244,7 +219,14 @@ export default function Transaction() {
         )}
       >
         <BottomSheetScrollView>
-          {selectedItem && <ProductDetail item={selectedItem} />}
+          {selectedItem && (
+            <ProductDetail
+              item={selectedItem}
+              onClickProduct={() => {
+                bottomSheetModalRef.current?.snapToIndex(1);
+              }}
+            />
+          )}
         </BottomSheetScrollView>
       </BottomSheetModal>
     </>
@@ -254,10 +236,10 @@ export default function Transaction() {
 const styles = StyleSheet.create({
   category: {
     display: "flex",
-    alignItems: "flex-start",
     flexDirection: "row",
     paddingVertical: 5,
     paddingLeft: 5,
+    width: "100%",
   },
   gridItem: {
     flex: 1 / numColumns,

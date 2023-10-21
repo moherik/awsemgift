@@ -5,8 +5,6 @@ import {
   MD3DarkTheme,
   MD3LightTheme,
   adaptNavigationTheme,
-  Appbar,
-  Text,
 } from "react-native-paper";
 import { name as appName } from "./app.json";
 import {
@@ -17,9 +15,9 @@ import {
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { RootSiblingParent } from "react-native-root-siblings";
-import { supabase } from "./lib/supabase";
+import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 
-import theme from "./theme/red";
+import theme from "./theme/custom";
 
 import HomeScreen from "./screen/HomeScreen";
 import PaymentScreen from "./screen/PaymentScreen";
@@ -33,7 +31,6 @@ import RegisterScreen from "./screen/RegisterScreen";
 import InboxScreen from "./screen/InboxScreen";
 
 import CustomProvider from "./components/CustomProvider";
-import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 
 const { LightTheme, DarkTheme } = adaptNavigationTheme({
   reactNavigationLight: NavigationDefaultTheme,
@@ -46,20 +43,13 @@ export default function App() {
   const [session, setSession] = useState(null);
 
   async function onSignout() {
-    await supabase.auth.signOut();
   }
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-    });
-
-    supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-    });
   }, []);
 
   const colorScheme = useColorScheme();
+
   const combinedTheme =
     colorScheme === "dark"
       ? {
@@ -87,17 +77,7 @@ export default function App() {
                       component={HomeScreen}
                       options={{
                         title: "AwsemGift",
-                        header: (props) => (
-                          <Appbar.Header
-                            style={{
-                              backgroundColor:
-                                combinedTheme.colors.primaryContainer,
-                            }}
-                          >
-                            <Appbar.Content title={props.options.title} />
-                            <Appbar.Action icon="logout" onPress={onSignout} />
-                          </Appbar.Header>
-                        ),
+                        headerShown: false,
                       }}
                     />
                     <Stack.Screen
