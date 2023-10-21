@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { AppRegistry, View, useColorScheme } from "react-native";
+import { AppRegistry, useColorScheme } from "react-native";
 import {
   PaperProvider,
   MD3DarkTheme,
@@ -18,10 +18,10 @@ import { RootSiblingParent } from "react-native-root-siblings";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 
 import theme from "./theme/custom";
+import { getToken } from "./lib/token";
 
 import HomeScreen from "./screen/HomeScreen";
 import PaymentScreen from "./screen/PaymentScreen";
-import AccountScreen from "./screen/AccountScreen";
 import TopupScreen from "./screen/TopupScreen";
 import AddContactScreen from "./screen/AddContactScreen";
 import ContactDetailScreen from "./screen/ContactDetailScreen";
@@ -40,12 +40,10 @@ const { LightTheme, DarkTheme } = adaptNavigationTheme({
 const Stack = createNativeStackNavigator();
 
 export default function App() {
-  const [session, setSession] = useState(null);
-
-  async function onSignout() {
-  }
+  const [authToken, setAuthToken] = useState(null);
 
   useEffect(() => {
+    setAuthToken(getToken() || null);
   }, []);
 
   const colorScheme = useColorScheme();
@@ -70,7 +68,7 @@ export default function App() {
           <BottomSheetModalProvider>
             <CustomProvider>
               <NavigationContainer theme={combinedTheme}>
-                {session && session.user ? (
+                {authToken ? (
                   <Stack.Navigator>
                     <Stack.Screen
                       name="Home"
@@ -99,11 +97,6 @@ export default function App() {
                       name="ReportDetail"
                       component={ReportDetailScreen}
                       options={{ title: "Detail Laporan" }}
-                    />
-                    <Stack.Screen
-                      name="Account"
-                      component={AccountScreen}
-                      options={{ title: "Akun Saya" }}
                     />
                     <Stack.Screen
                       name="Topup"

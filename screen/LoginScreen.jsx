@@ -6,7 +6,8 @@ import Toast from "react-native-root-toast";
 
 import { useLoader } from "../components/Loader";
 import { sender } from "../lib/sender";
-import { storage } from "../lib/storage";
+import { STORAGE_TYPE, storage } from "../lib/storage";
+import { setToken } from "../lib/token";
 
 export default function LoginScreen() {
   const theme = useTheme();
@@ -34,8 +35,7 @@ export default function LoginScreen() {
           throw new Error(data.message);
         }
 
-        storage("user").set("user.token", data.token);
-        storage("user").getString("user.token");
+        if (data.token) setToken(data.token);
       });
     } catch (error) {
       console.log(error);

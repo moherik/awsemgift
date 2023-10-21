@@ -1,10 +1,5 @@
 import { useState } from "react";
-import {
-  FlatList,
-  Image,
-  StyleSheet,
-  View,
-} from "react-native";
+import { FlatList, Image, StyleSheet, View } from "react-native";
 import {
   Button,
   Divider,
@@ -34,7 +29,7 @@ export default function ProductDetail({ item, onClickProduct }) {
         <View style={styles.productInfo}>
           <View>
             <Text variant="titleLarge">{item.name}</Text>
-            <Text variant="labelMedium">eGift &bull; {item.product_categories.name}</Text>
+            <Text variant="labelMedium">eGift &bull; {item.category.name}</Text>
             <Text variant="bodyMedium" style={{ marginTop: 8 }}>
               {item.price}
             </Text>
@@ -80,7 +75,13 @@ export default function ProductDetail({ item, onClickProduct }) {
                 }}
               >
                 <View style={{ display: "flex" }}>
-                  <Text variant="bodySmall" lineBreakMode="tail" numberOfLines={1}>{item.name}</Text>
+                  <Text
+                    variant="bodySmall"
+                    lineBreakMode="tail"
+                    numberOfLines={1}
+                  >
+                    {item.name}
+                  </Text>
                   <Text variant="bodyMedium">{item.price}</Text>
                 </View>
               </TouchableRipple>

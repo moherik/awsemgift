@@ -20,8 +20,12 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import { BottomSheetModal, BottomSheetScrollView } from "@gorhom/bottom-sheet";
 
+import { sender } from "../lib/sender";
+import { getToken } from "../lib/token";
+
 import CustomBackdrop from "./CustomBackdrop";
 import ProductDetail from "./ProductDetail";
+import { STORAGE_TYPE, storage } from "../lib/storage";
 
 let tempData = [];
 const numColumns = 2;
@@ -47,7 +51,16 @@ export default function Transaction() {
 
   async function fetchData() {
     setLoading(true);
-    setSelectedCategory(null);
+
+    await sender({ url: "products", token: getToken() })
+      .then((response) => {
+        tempData = response.data.products;
+
+        setProducts(response.data.products);
+        setCategories(response.data.categories);
+        setSelectedCategory(null);
+      })
+      .finally(() => setLoading(false));
   }
 
   useEffect(() => {

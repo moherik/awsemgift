@@ -11,6 +11,7 @@ import {
 } from "react-native-paper";
 import Constants from "expo-constants";
 import * as WebBrowser from "expo-web-browser";
+import { deleteToken } from "../lib/token";
 
 export default function Menu() {
   const theme = useTheme();
@@ -52,7 +53,7 @@ export default function Menu() {
     {
       id: 6,
       name: "Keluar",
-      onClick: () => {},
+      onClick: () => deleteToken(),
     },
   ];
 
@@ -96,7 +97,9 @@ export default function Menu() {
       )}
       data={data}
       ListFooterComponent={
-        <View style={{ marginTop: 40, alignItems: "center", padding: 15, gap: 5 }}>
+        <View
+          style={{ marginTop: 40, alignItems: "center", padding: 15, gap: 5 }}
+        >
           <Text variant="labelMedium">Awsemgift &copy; 2023</Text>
           <Text variant="labelMedium">Versi 1.0.0</Text>
         </View>
