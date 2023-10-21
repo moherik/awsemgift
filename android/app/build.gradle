@@ -81,9 +81,9 @@ android {
 
     compileSdkVersion rootProject.ext.compileSdkVersion
 
-    namespace 'com.emas.awsempay'
+    namespace 'com.emas.awsemgift'
     defaultConfig {
-        applicationId 'com.emas.awsempay'
+        applicationId 'com.emas.awsemgift'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

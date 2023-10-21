@@ -1,4 +1,4 @@
-package com.emas.awsempay;
+package com.emas.awsemgift;
 
 import android.os.Build;
 import android.os.Bundle;

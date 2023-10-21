@@ -1,4 +1,4 @@
-package com.emas.awsempay;
+package com.emas.awsemgift;
 
 import android.app.Application;
 import android.content.res.Configuration;

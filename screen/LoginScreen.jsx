@@ -5,6 +5,8 @@ import { Controller, useForm } from "react-hook-form";
 import Toast from "react-native-root-toast";
 
 import { useLoader } from "../components/Loader";
+import { sender } from "../lib/sender";
+import { storage } from "../lib/storage";
 
 export default function LoginScreen() {
   const theme = useTheme();
@@ -21,7 +23,22 @@ export default function LoginScreen() {
     try {
       showModal();
 
+      await sender({
+        url: "users/login",
+        data: { email, password },
+        method: "POST",
+      }).then((response) => {
+        const data = response?.data;
+
+        if (response.status != 200) {
+          throw new Error(data.message);
+        }
+
+        storage("user").set("user.token", data.token);
+        storage("user").getString("user.token");
+      });
     } catch (error) {
+      console.log(error);
       Toast.show(error?.message || "Terjadi kesalahan");
     } finally {
       hideModal();
