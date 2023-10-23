@@ -12,6 +12,7 @@ import { setToken } from "../lib/token";
 export default function LoginScreen() {
   const theme = useTheme();
   const navigation = useNavigation();
+
   const { showModal, hideModal } = useLoader();
   const { control, handleSubmit } = useForm({
     defaultValues: {
@@ -53,7 +54,6 @@ export default function LoginScreen() {
         justifyContent: "center",
         flex: 1,
         padding: 20,
-        backgroundColor: theme.colors.primaryContainer,
       }}
     >
       <View

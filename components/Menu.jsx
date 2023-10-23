@@ -2,6 +2,7 @@ import { useNavigation } from "@react-navigation/native";
 import { FlatList, View } from "react-native";
 import {
   Avatar,
+  Button,
   Divider,
   List,
   Surface,
@@ -11,11 +12,15 @@ import {
 } from "react-native-paper";
 import Constants from "expo-constants";
 import * as WebBrowser from "expo-web-browser";
-import { deleteToken } from "../lib/token";
+import { deleteToken, getToken } from "../lib/token";
+
+import LoginBanner from "./LoginBanner";
 
 export default function Menu() {
   const theme = useTheme();
   const navigation = useNavigation();
+
+  const isAuth = getToken() ? true : false;
 
   const data = [
     {
@@ -23,6 +28,7 @@ export default function Menu() {
       name: "Favorit",
       desc: "Produk favorit tersimpan",
       icon: "heart-circle",
+      isActive: isAuth,
       onClick: () => {},
     },
     {
@@ -30,6 +36,7 @@ export default function Menu() {
       name: "Riwayat Transaksi",
       desc: "Hadiah yang pernah dikirimkan",
       icon: "gift-open",
+      isActive: isAuth,
       onClick: () => {},
     },
     {
@@ -37,22 +44,26 @@ export default function Menu() {
       name: "Bantuan",
       desc: "Pusat bantuan, hubungi kami",
       icon: "help-box",
+      isActive: true,
       onClick: () => {},
     },
     {
       id: 4,
       name: "Kebijakan Privasi",
+      isActive: true,
       onClick: async () =>
         await WebBrowser.openBrowserAsync("https://google.com"),
     },
     {
       id: 5,
       name: "Hapus Akun",
+      isActive: isAuth,
       onClick: () => {},
     },
     {
       id: 6,
       name: "Keluar",
+      isActive: isAuth,
       onClick: () => deleteToken(),
     },
   ];
@@ -60,41 +71,50 @@ export default function Menu() {
   return (
     <FlatList
       ListHeaderComponent={
-        <TouchableRipple onPress={() => {}}>
-          <Surface style={{ paddingTop: Constants.statusBarHeight }}>
-            <View
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                paddingVertical: 20,
-                paddingHorizontal: 20,
-                gap: 15,
-                alignItems: "center",
-              }}
-            >
-              <Avatar.Icon icon="account" size={38} />
-              <View>
-                <Text variant="titleMedium">Erik Maulana</Text>
-                <Text>muherik.maulana@gmail.com</Text>
+        isAuth ? (
+          <TouchableRipple
+            style={{ paddingTop: Constants.statusBarHeight }}
+            onPress={() => {}}
+          >
+            <Surface>
+              <View
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  paddingVertical: 20,
+                  paddingHorizontal: 20,
+                  gap: 15,
+                  alignItems: "center",
+                }}
+              >
+                <Avatar.Icon icon="account" size={38} />
+                <View>
+                  <Text variant="titleMedium">Erik Maulana</Text>
+                  <Text>muherik.maulana@gmail.com</Text>
+                </View>
               </View>
-            </View>
-          </Surface>
-        </TouchableRipple>
+            </Surface>
+          </TouchableRipple>
+        ) : (
+          <LoginBanner />
+        )
       }
       keyExtractor={(item) => item.id}
       ItemSeparatorComponent={<Divider />}
-      renderItem={({ item }) => (
-        <List.Item
-          title={item.name}
-          description={item.desc}
-          style={{ paddingLeft: !item.icon ? 40 : 0 }}
-          left={(props) =>
-            item.icon ? <List.Icon {...props} icon={item.icon} /> : null
-          }
-          right={(props) => <List.Icon {...props} icon={item.iconRight} />}
-          onPress={item.onClick}
-        />
-      )}
+      renderItem={({ item }) =>
+        item.isActive && (
+          <List.Item
+            title={item.name}
+            description={item.desc}
+            style={{ paddingLeft: !item.icon ? 40 : 0 }}
+            left={(props) =>
+              item.icon ? <List.Icon {...props} icon={item.icon} /> : null
+            }
+            right={(props) => <List.Icon {...props} icon={item.iconRight} />}
+            onPress={item.onClick}
+          />
+        )
+      }
       data={data}
       ListFooterComponent={
         <View

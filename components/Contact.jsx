@@ -10,6 +10,8 @@ import {
   useTheme,
 } from "react-native-paper";
 import Constants from "expo-constants";
+import { getToken } from "../lib/token";
+import LoginBanner from "./LoginBanner";
 
 const data = [
   {
@@ -31,12 +33,18 @@ export default function Contact() {
   const theme = useTheme();
   const navigation = useNavigation();
 
+  const isAuth = getToken() ? true : false;
+
   const onScroll = ({ nativeEvent }) => {
     const currentScrollPosition =
       Math.floor(nativeEvent?.contentOffset?.y) ?? 0;
 
     setIsExtended(currentScrollPosition <= 0);
   };
+
+  if (!isAuth) {
+    return <LoginBanner />;
+  }
 
   return (
     <>
