@@ -20,7 +20,7 @@ export default function AuthProvider({ children }) {
 
   async function signIn(email, password) {
     return await sender({
-      url: "users/login",
+      url: "auth/login",
       data: { email, password },
       method: "POST",
     })
@@ -31,8 +31,8 @@ export default function AuthProvider({ children }) {
           throw new Error(data.message);
         }
 
-        if (data.token) {
-          await setToken(data.token);
+        if (data.accessToken) {
+          await setToken(data.accessToken);
           setuserData(data);
 
           return true;
