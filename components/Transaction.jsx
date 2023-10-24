@@ -20,9 +20,8 @@ import {
 import { BottomSheetModal, BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import Toast from "react-native-root-toast";
 
-import { sender } from "../lib/sender";
-import { getToken } from "../lib/token";
 import { useAuth } from "../hooks/useAuth";
+import api from "../lib/api";
 
 import CustomBackdrop from "./CustomBackdrop";
 import ProductDetail from "./ProductDetail";
@@ -52,7 +51,8 @@ export default function Transaction() {
   async function fetchData() {
     setLoading(true);
 
-    await sender({ url: "products", token: getToken() })
+    await api
+      .get("products")
       .then((response) => {
         tempData = response.data?.products || [];
 

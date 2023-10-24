@@ -14,7 +14,6 @@ import Constants from "expo-constants";
 import * as WebBrowser from "expo-web-browser";
 
 import { useAuth } from "../hooks/useAuth";
-import { sender } from "../lib/sender";
 
 import LoginBanner from "./LoginBanner";
 

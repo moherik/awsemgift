@@ -18,7 +18,6 @@ import { RootSiblingParent } from "react-native-root-siblings";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 
 import theme from "./theme/custom";
-import { getToken } from "./lib/token";
 
 import HomeScreen from "./screen/HomeScreen";
 import PaymentScreen from "./screen/PaymentScreen";
@@ -40,12 +39,6 @@ const { LightTheme, DarkTheme } = adaptNavigationTheme({
 const Stack = createNativeStackNavigator();
 
 export default function App() {
-  const [authToken, setAuthToken] = useState(null);
-
-  useEffect(() => {
-    setAuthToken(getToken() || null);
-  }, []);
-
   const colorScheme = useColorScheme();
 
   const combinedTheme =

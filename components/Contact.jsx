@@ -10,9 +10,10 @@ import {
   useTheme,
 } from "react-native-paper";
 import Constants from "expo-constants";
-import { getToken } from "../lib/token";
-import LoginBanner from "./LoginBanner";
+
 import { useAuth } from "../hooks/useAuth";
+
+import LoginBanner from "./LoginBanner";
 
 const data = [
   {

@@ -1,6 +1,14 @@
 import React, { createContext, useEffect, useState } from "react";
-import { sender } from "../lib/sender";
-import { deleteToken, getToken, setToken } from "../lib/token";
+
+import {
+  deleteAccessToken,
+  deleteRefreshToken,
+  deleteToken,
+  getAccessToken,
+  setAccessToken,
+  setRefreshToken,
+} from "../lib/token";
+import api from "../lib/api";
 
 export const AuthContext = createContext({});
 
@@ -12,18 +20,17 @@ export default function AuthProvider({ children }) {
   }, []);
 
   async function loadStorageData() {
-    const authToken = await getToken();
+    const authToken = await getAccessToken();
     if (authToken) {
       setuserData(authToken);
+    } else {
+      setuserData(undefined);
     }
   }
 
   async function signIn(email, password) {
-    return await sender({
-      url: "auth/login",
-      data: { email, password },
-      method: "POST",
-    })
+    return await api
+      .post("/auth/signin", { email, password })
       .then(async (response) => {
         const data = response?.data;
 
@@ -31,8 +38,9 @@ export default function AuthProvider({ children }) {
           throw new Error(data.message);
         }
 
-        if (data.accessToken) {
-          await setToken(data.accessToken);
+        if (data.accessToken && data.refreshToken) {
+          await setAccessToken(data.accessToken);
+          await setRefreshToken(data.refreshToken);
           setuserData(data);
 
           return true;
@@ -41,13 +49,14 @@ export default function AuthProvider({ children }) {
         return false;
       })
       .catch((err) => {
-        console.log(err);
         return false;
       });
   }
 
   async function signOut() {
-    await deleteToken();
+    await deleteAccessToken();
+    await deleteRefreshToken();
+
     setuserData(undefined);
   }
 
