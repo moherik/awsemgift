@@ -17,15 +17,15 @@ import {
   TouchableRipple,
   useTheme,
 } from "react-native-paper";
-import { useNavigation } from "@react-navigation/native";
 import { BottomSheetModal, BottomSheetScrollView } from "@gorhom/bottom-sheet";
+import Toast from "react-native-root-toast";
 
 import { sender } from "../lib/sender";
 import { getToken } from "../lib/token";
+import { useAuth } from "../hooks/useAuth";
 
 import CustomBackdrop from "./CustomBackdrop";
 import ProductDetail from "./ProductDetail";
-import { STORAGE_TYPE, storage } from "../lib/storage";
 
 let tempData = [];
 const numColumns = 2;
@@ -41,7 +41,7 @@ export default function Transaction() {
   const [selectedCategory, setSelectedCategory] = useState();
 
   const theme = useTheme();
-  const navigation = useNavigation();
+  const auth = useAuth();
 
   // ref
   const bottomSheetModalRef = useRef(null);
@@ -54,10 +54,10 @@ export default function Transaction() {
 
     await sender({ url: "products", token: getToken() })
       .then((response) => {
-        tempData = response.data.products;
+        tempData = response.data?.products || [];
 
-        setProducts(response.data.products);
-        setCategories(response.data.categories);
+        setProducts(response.data?.products || []);
+        setCategories(response.data?.categories || []);
         setSelectedCategory(null);
       })
       .finally(() => setLoading(false));
@@ -80,9 +80,7 @@ export default function Transaction() {
 
     if (selectedCategory) {
       filteredData = filteredData.filter((product) =>
-        product.product_categories
-          ? product.product_categories.id == selectedCategory.id
-          : null
+        product.category ? product.category.id == selectedCategory.id : null
       );
     }
 
@@ -105,6 +103,12 @@ export default function Transaction() {
       setSelectedCategory(null);
     } else {
       setSelectedCategory(category);
+    }
+  }
+
+  async function handleAddToFavorite() {
+    if (!auth.userData) {
+      Toast.show("Perlu login untuk mengakses fitur ini");
     }
   }
 
@@ -235,6 +239,7 @@ export default function Transaction() {
           {selectedItem && (
             <ProductDetail
               item={selectedItem}
+              onAddFavorite={handleAddToFavorite}
               onClickProduct={() => {
                 bottomSheetModalRef.current?.snapToIndex(1);
               }}

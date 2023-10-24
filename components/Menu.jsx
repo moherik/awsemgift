@@ -1,8 +1,8 @@
+import { useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { FlatList, View } from "react-native";
 import {
   Avatar,
-  Button,
   Divider,
   List,
   Surface,
@@ -12,7 +12,9 @@ import {
 } from "react-native-paper";
 import Constants from "expo-constants";
 import * as WebBrowser from "expo-web-browser";
-import { deleteToken, getToken } from "../lib/token";
+
+import { useAuth } from "../hooks/useAuth";
+import { sender } from "../lib/sender";
 
 import LoginBanner from "./LoginBanner";
 
@@ -20,7 +22,8 @@ export default function Menu() {
   const theme = useTheme();
   const navigation = useNavigation();
 
-  const isAuth = getToken() ? true : false;
+  const auth = useAuth();
+  useEffect(() => {}, []);
 
   const data = [
     {
@@ -28,7 +31,7 @@ export default function Menu() {
       name: "Favorit",
       desc: "Produk favorit tersimpan",
       icon: "heart-circle",
-      isActive: isAuth,
+      isActive: auth.userData,
       onClick: () => {},
     },
     {
@@ -36,7 +39,7 @@ export default function Menu() {
       name: "Riwayat Transaksi",
       desc: "Hadiah yang pernah dikirimkan",
       icon: "gift-open",
-      isActive: isAuth,
+      isActive: auth.userData,
       onClick: () => {},
     },
     {
@@ -57,21 +60,21 @@ export default function Menu() {
     {
       id: 5,
       name: "Hapus Akun",
-      isActive: isAuth,
+      isActive: auth.userData,
       onClick: () => {},
     },
     {
       id: 6,
       name: "Keluar",
-      isActive: isAuth,
-      onClick: () => deleteToken(),
+      isActive: auth.userData,
+      onClick: () => auth.signOut(),
     },
   ];
 
   return (
     <FlatList
       ListHeaderComponent={
-        isAuth ? (
+        auth.userData ? (
           <TouchableRipple
             style={{ paddingTop: Constants.statusBarHeight }}
             onPress={() => {}}

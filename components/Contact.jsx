@@ -12,6 +12,7 @@ import {
 import Constants from "expo-constants";
 import { getToken } from "../lib/token";
 import LoginBanner from "./LoginBanner";
+import { useAuth } from "../hooks/useAuth";
 
 const data = [
   {
@@ -33,7 +34,7 @@ export default function Contact() {
   const theme = useTheme();
   const navigation = useNavigation();
 
-  const isAuth = getToken() ? true : false;
+  const auth = useAuth();
 
   const onScroll = ({ nativeEvent }) => {
     const currentScrollPosition =
@@ -42,7 +43,7 @@ export default function Contact() {
     setIsExtended(currentScrollPosition <= 0);
   };
 
-  if (!isAuth) {
+  if (!auth.userData) {
     return <LoginBanner />;
   }
 

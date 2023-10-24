@@ -1,5 +1,10 @@
+import AuthProvider from "./AuthContext";
 import LoaderProvider from "./Loader";
 
 export default function CustomProvider({ children }) {
-  return <LoaderProvider>{children}</LoaderProvider>;
+  return (
+    <AuthProvider>
+      <LoaderProvider>{children}</LoaderProvider>
+    </AuthProvider>
+  );
 }

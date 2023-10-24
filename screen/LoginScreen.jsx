@@ -5,13 +5,11 @@ import { Controller, useForm } from "react-hook-form";
 import Toast from "react-native-root-toast";
 
 import { useLoader } from "../components/Loader";
-import { sender } from "../lib/sender";
-import { STORAGE_TYPE, storage } from "../lib/storage";
-import { setToken } from "../lib/token";
+import { useAuth } from "../hooks/useAuth";
 
 export default function LoginScreen() {
-  const theme = useTheme();
   const navigation = useNavigation();
+  const auth = useAuth();
 
   const { showModal, hideModal } = useLoader();
   const { control, handleSubmit } = useForm({
@@ -25,18 +23,10 @@ export default function LoginScreen() {
     try {
       showModal();
 
-      await sender({
-        url: "users/login",
-        data: { email, password },
-        method: "POST",
-      }).then((response) => {
-        const data = response?.data;
+      await auth.signIn(email, password).then((res) => {
+        if (!res) throw new Error("Gagal melakukan login");
 
-        if (response.status != 200) {
-          throw new Error(data.message);
-        }
-
-        if (data.token) setToken(data.token);
+        navigation.goBack();
       });
     } catch (error) {
       console.log(error);
@@ -51,9 +41,7 @@ export default function LoginScreen() {
       style={{
         display: "flex",
         alignItems: "center",
-        justifyContent: "center",
         flex: 1,
-        padding: 20,
       }}
     >
       <View

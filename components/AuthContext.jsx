@@ -1,84 +1,59 @@
-import * as React from "react";
-import { getToken } from "../lib/token";
+import React, { createContext, useEffect, useState } from "react";
+import { sender } from "../lib/sender";
+import { deleteToken, getToken, setToken } from "../lib/token";
 
-const AuthContext = React.createContext();
+export const AuthContext = createContext({});
 
 export default function AuthProvider({ children }) {
-  const [state, dispatch] = React.useReducer(
-    (prevState, action) => {
-      switch (action.type) {
-        case "RESTORE_TOKEN":
-          return {
-            ...prevState,
-            userToken: action.token,
-            isLoading: false,
-          };
-        case "SIGN_IN":
-          return {
-            ...prevState,
-            isSignout: false,
-            userToken: action.token,
-          };
-        case "SIGN_OUT":
-          return {
-            ...prevState,
-            isSignout: true,
-            userToken: null,
-          };
-      }
-    },
-    {
-      isLoading: true,
-      isSignout: false,
-      userToken: null,
-    }
-  );
+  const [userData, setuserData] = useState({});
 
-  React.useEffect(() => {
-    // Fetch the token from storage then navigate to our appropriate place
-    const bootstrapAsync = async () => {
-      let userToken;
-
-      try {
-        userToken = getToken();
-      } catch (e) {
-        // Restoring token failed
-      }
-
-      // After restoring token, we may need to validate it in production apps
-
-      // This will switch to the App screen or Auth screen and this loading
-      // screen will be unmounted and thrown away.
-      dispatch({ type: "RESTORE_TOKEN", token: userToken });
-    };
-
-    bootstrapAsync();
+  useEffect(() => {
+    loadStorageData();
   }, []);
 
-  const authContext = React.useMemo(
-    () => ({
-      signIn: async (data) => {
-        // In a production app, we need to send some data (usually username, password) to server and get a token
-        // We will also need to handle errors if sign in failed
-        // After getting token, we need to persist the token using `SecureStore`
-        // In the example, we'll use a dummy token
+  async function loadStorageData() {
+    const authToken = await getToken();
+    if (authToken) {
+      setuserData(authToken);
+    }
+  }
 
-        dispatch({ type: "SIGN_IN", token: "dummy-auth-token" });
-      },
-      signOut: () => dispatch({ type: "SIGN_OUT" }),
-      signUp: async (data) => {
-        // In a production app, we need to send user data to server and get a token
-        // We will also need to handle errors if sign up failed
-        // After getting token, we need to persist the token using `SecureStore`
-        // In the example, we'll use a dummy token
+  async function signIn(email, password) {
+    return await sender({
+      url: "users/login",
+      data: { email, password },
+      method: "POST",
+    })
+      .then(async (response) => {
+        const data = response?.data;
 
-        dispatch({ type: "SIGN_IN", token: "dummy-auth-token" });
-      },
-    }),
-    []
-  );
+        if (response.status != 200) {
+          throw new Error(data.message);
+        }
+
+        if (data.token) {
+          await setToken(data.token);
+          setuserData(data);
+
+          return true;
+        }
+
+        return false;
+      })
+      .catch((err) => {
+        console.log(err);
+        return false;
+      });
+  }
+
+  async function signOut() {
+    await deleteToken();
+    setuserData(undefined);
+  }
 
   return (
-    <AuthContext.Provider value={authContext}>{children}</AuthContext.Provider>
+    <AuthContext.Provider value={{ userData, signIn, signOut }}>
+      {children}
+    </AuthContext.Provider>
   );
 }

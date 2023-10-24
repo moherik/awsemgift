@@ -9,10 +9,14 @@ import {
   TouchableRipple,
   useTheme,
 } from "react-native-paper";
+import { useNavigation } from "@react-navigation/native";
+
+import { useAuth } from "../hooks/useAuth";
+import { currency } from "../lib/numberFormat";
 
 const numColumns = 2;
 
-export default function ProductDetail({ item, onClickProduct }) {
+export default function ProductDetail({ item, onClickProduct, onAddFavorite }) {
   const [selectedProduct, setselectedProduct] = useState();
 
   const theme = useTheme();
@@ -34,7 +38,7 @@ export default function ProductDetail({ item, onClickProduct }) {
               {item.price}
             </Text>
           </View>
-          <IconButton icon="heart-outline" onPress={() => {}} />
+          <IconButton icon="heart-outline" onPress={onAddFavorite} />
         </View>
       </View>
       {item.info && (
@@ -82,7 +86,7 @@ export default function ProductDetail({ item, onClickProduct }) {
                   >
                     {item.name}
                   </Text>
-                  <Text variant="bodyMedium">{item.price}</Text>
+                  <Text variant="bodyMedium">{currency(item.price)}</Text>
                 </View>
               </TouchableRipple>
             </View>
