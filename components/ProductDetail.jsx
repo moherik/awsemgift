@@ -9,17 +9,75 @@ import {
   TouchableRipple,
   useTheme,
 } from "react-native-paper";
-import { useNavigation } from "@react-navigation/native";
+import { Controller, useForm } from "react-hook-form";
+import * as Contacts from "expo-contacts";
+import Toast from "react-native-root-toast";
 
-import { useAuth } from "../hooks/useAuth";
 import { currency } from "../lib/numberFormat";
+import api from "../lib/api";
+import { useLoader } from "./Loader";
 
 const numColumns = 2;
 
-export default function ProductDetail({ item, onClickProduct, onAddFavorite }) {
+export default function ProductDetail({
+  item,
+  onClickProduct,
+  onClickFavorite,
+}) {
   const [selectedProduct, setselectedProduct] = useState();
+  const [isFavorite, setIsFavorite] = useState(item.isFavorite || false);
 
   const theme = useTheme();
+  const { showModal, hideModal } = useLoader();
+  const { control, handleSubmit } = useForm({
+    defaultValues: {
+      phone: "",
+      name: "",
+      note: "",
+    },
+  });
+
+  async function onSubmit({ phone, name, note }) {
+    try {
+      showModal();
+
+      await api
+        .post("gift/order", {
+          productCode: selectedProduct.code,
+          phone,
+          name,
+          note,
+        })
+        .then((response) => {
+          if (!response) throw new Error("Gagal menambahkan hadiah");
+
+          console.log(response);
+        });
+    } catch (error) {
+      Toast.show(error?.message || "Terjadi kesalahan");
+    } finally {
+      hideModal();
+    }
+  }
+
+  function handleFavorite() {
+    setIsFavorite(!isFavorite);
+
+    onClickFavorite();
+  }
+
+  async function handleClickContact() {
+    const { status } = await Contacts.requestPermissionsAsync();
+    if (status === "granted") {
+      const { data } = await Contacts.getContactsAsync({
+        fields: [Contacts.Fields.PhoneNumbers],
+      });
+
+      if (data.length > 0) {
+        console.log(data);
+      }
+    }
+  }
 
   return (
     <>
@@ -38,7 +96,11 @@ export default function ProductDetail({ item, onClickProduct, onAddFavorite }) {
               {item.price}
             </Text>
           </View>
-          <IconButton icon="heart-outline" onPress={onAddFavorite} />
+          <IconButton
+            iconColor={isFavorite ? theme.colors.error : theme.colors.shadow}
+            icon={isFavorite ? "heart" : "heart-outline"}
+            onPress={handleFavorite}
+          />
         </View>
       </View>
       {item.info && (
@@ -111,14 +173,61 @@ export default function ProductDetail({ item, onClickProduct, onAddFavorite }) {
                 gap: 10,
               }}
             >
-              <TextInput
-                mode="outlined"
-                label="Nomor Telepon"
-                right={<TextInput.Icon icon="contacts" onPress={() => {}} />}
+              <Controller
+                control={control}
+                rules={{ required: true }}
+                name="phone"
+                render={({ field: { onBlur, onChange, value } }) => (
+                  <TextInput
+                    mode="outlined"
+                    label="Nomor Telepon"
+                    value={value}
+                    onBlur={onBlur}
+                    onChangeText={onChange}
+                    right={
+                      <TextInput.Icon
+                        icon="contacts"
+                        onPress={handleClickContact}
+                      />
+                    }
+                  />
+                )}
               />
-              <TextInput mode="outlined" label="Catatan (opsional)" multiline />
+              <Controller
+                control={control}
+                rules={{ required: true }}
+                name="name"
+                render={({ field: { onBlur, onChange, value } }) => (
+                  <TextInput
+                    mode="outlined"
+                    label="Nama Panggilan"
+                    value={value}
+                    onBlur={onBlur}
+                    onChangeText={onChange}
+                  />
+                )}
+              />
+              <Controller
+                control={control}
+                rules={{ required: true }}
+                name="note"
+                render={({ field: { onBlur, onChange, value } }) => (
+                  <TextInput
+                    mode="outlined"
+                    label="Ucapan"
+                    multiline
+                    value={value}
+                    onBlur={onBlur}
+                    onChangeText={onChange}
+                  />
+                )}
+              />
             </View>
-            <Button mode="contained" icon="gift" onPress={() => {}}>
+            <Button
+              mode="contained"
+              icon="gift"
+              onPress={handleSubmit(onSubmit)}
+            >
               Kirim Hadiah
             </Button>
           </View>

@@ -106,10 +106,20 @@ export default function Transaction() {
     }
   }
 
-  async function handleAddToFavorite() {
+  async function handleFavorite() {
     if (!auth.userData) {
       Toast.show("Perlu login untuk mengakses fitur ini");
     }
+
+    selectedItem.isFavorite = !selectedItem.isFavorite;
+    setSelectedItem(selectedItem);
+
+    await api
+      .post("products/favorites", {
+        productGroupId: selectedItem.id,
+      })
+      .then((response) => console.log(response))
+      .catch((err) => console.log(err));
   }
 
   return (
@@ -239,7 +249,7 @@ export default function Transaction() {
           {selectedItem && (
             <ProductDetail
               item={selectedItem}
-              onAddFavorite={handleAddToFavorite}
+              onClickFavorite={handleFavorite}
               onClickProduct={() => {
                 bottomSheetModalRef.current?.snapToIndex(1);
               }}

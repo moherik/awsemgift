@@ -22,15 +22,18 @@ export default function AuthProvider({ children }) {
   async function loadStorageData() {
     const authToken = await getAccessToken();
     if (authToken) {
-      setuserData(authToken);
-    } else {
-      setuserData(undefined);
+      await api.get("users/profile").then((response) => {
+        setuserData(response.data);
+      });
+      return;
     }
+
+    setuserData(undefined);
   }
 
   async function signIn(email, password) {
     return await api
-      .post("/auth/signin", { email, password })
+      .post("auth/signin", { email, password })
       .then(async (response) => {
         const data = response?.data;
 
@@ -39,9 +42,12 @@ export default function AuthProvider({ children }) {
         }
 
         if (data.accessToken && data.refreshToken) {
-          await setAccessToken(data.accessToken);
-          await setRefreshToken(data.refreshToken);
-          setuserData(data);
+          const { accessToken, refreshToken, ...userData } = data;
+
+          await setAccessToken(accessToken);
+          await setRefreshToken(refreshToken);
+
+          setuserData(userData);
 
           return true;
         }

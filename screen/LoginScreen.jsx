@@ -29,7 +29,6 @@ export default function LoginScreen() {
         navigation.goBack();
       });
     } catch (error) {
-      console.log(error);
       Toast.show(error?.message || "Terjadi kesalahan");
     } finally {
       hideModal();

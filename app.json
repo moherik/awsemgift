@@ -11,9 +11,7 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.emas.awsemgift"
@@ -27,6 +25,14 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "plugins": [
+      [
+        "expo-contacts",
+        {
+          "contactsPermission": "Allow $(PRODUCT_NAME) to access your contacts."
+        }
+      ]
+    ]
   }
 }

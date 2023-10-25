@@ -91,8 +91,8 @@ export default function Menu() {
               >
                 <Avatar.Icon icon="account" size={38} />
                 <View>
-                  <Text variant="titleMedium">Erik Maulana</Text>
-                  <Text>muherik.maulana@gmail.com</Text>
+                  <Text variant="titleMedium">{auth.userData.name}</Text>
+                  <Text>{auth.userData.email}</Text>
                 </View>
               </View>
             </Surface>
