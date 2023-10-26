@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FlatList, Image, StyleSheet, View } from "react-native";
 import {
   Button,
@@ -10,17 +10,19 @@ import {
   useTheme,
 } from "react-native-paper";
 import { Controller, useForm } from "react-hook-form";
-import * as Contacts from "expo-contacts";
 import Toast from "react-native-root-toast";
 
 import { currency } from "../lib/numberFormat";
 import api from "../lib/api";
+
 import { useLoader } from "./Loader";
 
 const numColumns = 2;
 
 export default function ProductDetail({
   item,
+  contact,
+  navigation,
   onClickProduct,
   onClickFavorite,
 }) {
@@ -29,13 +31,18 @@ export default function ProductDetail({
 
   const theme = useTheme();
   const { showModal, hideModal } = useLoader();
-  const { control, handleSubmit } = useForm({
+  const { control, handleSubmit, setValue } = useForm({
     defaultValues: {
       phone: "",
       name: "",
       note: "",
     },
   });
+
+  useEffect(() => {
+    setValue("phone", contact.selectedItem?.phoneNumbers[0].number);
+    setValue("name", contact.selectedItem?.name);
+  }, [contact.selectedItem]);
 
   async function onSubmit({ phone, name, note }) {
     try {
@@ -66,17 +73,8 @@ export default function ProductDetail({
     onClickFavorite();
   }
 
-  async function handleClickContact() {
-    const { status } = await Contacts.requestPermissionsAsync();
-    if (status === "granted") {
-      const { data } = await Contacts.getContactsAsync({
-        fields: [Contacts.Fields.PhoneNumbers],
-      });
-
-      if (data.length > 0) {
-        console.log(data);
-      }
-    }
+  function handleClickContact() {
+    contact.open();
   }
 
   return (

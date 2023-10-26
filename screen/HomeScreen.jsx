@@ -18,17 +18,17 @@ export default function MainScreen() {
     >
       <Tab.Screen
         name="Transaction"
-        options={{ title: "Kirim", tabBarIcon: 'gift' }}
+        options={{ title: "Kirim", tabBarIcon: "gift" }}
         component={Transaction}
       />
       <Tab.Screen
         name="Contact"
-        options={{ title: "Kontak", tabBarIcon: 'account-multiple' }}
+        options={{ title: "Kontak", tabBarIcon: "account-multiple" }}
         component={Contact}
       />
       <Tab.Screen
         name="Menu"
-        options={{ title: "Menu", tabBarIcon: 'menu' }}
+        options={{ title: "Menu", tabBarIcon: "menu" }}
         component={Menu}
       />
     </Tab.Navigator>

@@ -18,13 +18,15 @@ import {
   useTheme,
 } from "react-native-paper";
 import { BottomSheetModal, BottomSheetScrollView } from "@gorhom/bottom-sheet";
+import { useNavigation } from "@react-navigation/native";
 import Toast from "react-native-root-toast";
 
-import { useAuth } from "../hooks/useAuth";
+import useAuth from "../hooks/useAuth";
 import api from "../lib/api";
 
 import CustomBackdrop from "./CustomBackdrop";
 import ProductDetail from "./ProductDetail";
+import useContactList from "../hooks/useContactList";
 
 let tempData = [];
 const numColumns = 2;
@@ -41,6 +43,8 @@ export default function Transaction() {
 
   const theme = useTheme();
   const auth = useAuth();
+  const contact = useContactList();
+  const navigation = useNavigation();
 
   // ref
   const bottomSheetModalRef = useRef(null);
@@ -94,8 +98,10 @@ export default function Transaction() {
     bottomSheetModalRef.current?.present();
   }
 
-  function dismissModal() {
+  function handleOnDismissModal() {
     bottomSheetModalRef.current?.dismiss();
+
+    contact.setSelectedItem(undefined);
   }
 
   function handleOnClickCategory(category) {
@@ -235,13 +241,14 @@ export default function Transaction() {
         ref={bottomSheetModalRef}
         index={0}
         snapPoints={snapPoints}
+        onDismiss={handleOnDismissModal}
         backdropComponent={({ animatedIndex, style }) => (
           <CustomBackdrop
             animatedIndex={animatedIndex}
             style={style}
             color={selectedItem?.color}
             cover={selectedItem?.cover}
-            onPress={dismissModal}
+            onPress={handleOnDismissModal}
           />
         )}
       >
@@ -249,6 +256,8 @@ export default function Transaction() {
           {selectedItem && (
             <ProductDetail
               item={selectedItem}
+              navigation={navigation}
+              contact={contact}
               onClickFavorite={handleFavorite}
               onClickProduct={() => {
                 bottomSheetModalRef.current?.snapToIndex(1);

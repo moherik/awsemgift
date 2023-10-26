@@ -5,7 +5,7 @@ import { Controller, useForm } from "react-hook-form";
 import Toast from "react-native-root-toast";
 
 import { useLoader } from "../components/Loader";
-import { useAuth } from "../hooks/useAuth";
+import useAuth from "../hooks/useAuth";
 
 export default function LoginScreen() {
   const navigation = useNavigation();

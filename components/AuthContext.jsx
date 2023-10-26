@@ -3,7 +3,6 @@ import React, { createContext, useEffect, useState } from "react";
 import {
   deleteAccessToken,
   deleteRefreshToken,
-  deleteToken,
   getAccessToken,
   setAccessToken,
   setRefreshToken,
