@@ -22,11 +22,11 @@ import { useNavigation } from "@react-navigation/native";
 import Toast from "react-native-root-toast";
 
 import useAuth from "../hooks/useAuth";
+import useContactList from "../hooks/useContactList";
 import api from "../lib/api";
 
 import CustomBackdrop from "./CustomBackdrop";
 import ProductDetail from "./ProductDetail";
-import useContactList from "../hooks/useContactList";
 
 let tempData = [];
 const numColumns = 2;
@@ -256,8 +256,10 @@ export default function Transaction() {
           {selectedItem && (
             <ProductDetail
               item={selectedItem}
+              auth={auth}
               navigation={navigation}
               contact={contact}
+              dismissModal={handleOnDismissModal}
               onClickFavorite={handleFavorite}
               onClickProduct={() => {
                 bottomSheetModalRef.current?.snapToIndex(1);

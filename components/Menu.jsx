@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { FlatList, View } from "react-native";
 import {
@@ -8,7 +7,6 @@ import {
   Surface,
   Text,
   TouchableRipple,
-  useTheme,
 } from "react-native-paper";
 import Constants from "expo-constants";
 import * as WebBrowser from "expo-web-browser";
@@ -18,11 +16,9 @@ import useAuth from "../hooks/useAuth";
 import LoginBanner from "./LoginBanner";
 
 export default function Menu() {
-  const theme = useTheme();
   const navigation = useNavigation();
 
   const auth = useAuth();
-  useEffect(() => {}, []);
 
   const data = [
     {
@@ -30,14 +26,6 @@ export default function Menu() {
       name: "Favorit",
       desc: "Produk favorit tersimpan",
       icon: "heart-circle",
-      isActive: auth.userData,
-      onClick: () => {},
-    },
-    {
-      id: 2,
-      name: "Riwayat Transaksi",
-      desc: "Hadiah yang pernah dikirimkan",
-      icon: "gift-open",
       isActive: auth.userData,
       onClick: () => {},
     },
@@ -70,6 +58,10 @@ export default function Menu() {
     },
   ];
 
+  function handleClickLogin() {
+    navigation.navigate("Login");
+  }
+
   return (
     <FlatList
       ListHeaderComponent={
@@ -98,7 +90,7 @@ export default function Menu() {
             </Surface>
           </TouchableRipple>
         ) : (
-          <LoginBanner />
+          <LoginBanner onClick={handleClickLogin} />
         )
       }
       keyExtractor={(item) => item.id}

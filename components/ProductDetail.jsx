@@ -16,12 +16,15 @@ import { currency } from "../lib/numberFormat";
 import api from "../lib/api";
 
 import { useLoader } from "./Loader";
+import LoginBanner from "./LoginBanner";
 
 const numColumns = 2;
 
 export default function ProductDetail({
   item,
+  auth,
   contact,
+  dismissModal,
   navigation,
   onClickProduct,
   onClickFavorite,
@@ -75,6 +78,14 @@ export default function ProductDetail({
 
   function handleClickContact() {
     contact.open();
+  }
+
+  function handleClickLogin() {
+    dismissModal();
+
+    setTimeout(() => {
+      navigation?.navigate("Login");
+    }, 100);
   }
 
   return (
@@ -157,78 +168,89 @@ export default function ProductDetail({
       {selectedProduct && (
         <>
           <Divider />
-          <Text
-            style={{ paddingHorizontal: 10, paddingVertical: 10 }}
-            variant="labelMedium"
-          >
-            Penerima
-          </Text>
-          <View style={{ paddingHorizontal: 10, marginBottom: 20 }}>
-            <View
-              style={{
-                display: "flex",
-                marginBottom: 20,
-                gap: 10,
-              }}
-            >
-              <Controller
-                control={control}
-                rules={{ required: true }}
-                name="phone"
-                render={({ field: { onBlur, onChange, value } }) => (
-                  <TextInput
-                    mode="outlined"
-                    label="Nomor Telepon"
-                    value={value}
-                    onBlur={onBlur}
-                    onChangeText={onChange}
-                    right={
-                      <TextInput.Icon
-                        icon="contacts"
-                        onPress={handleClickContact}
+          {!auth.userData ? (
+            <LoginBanner
+              navigation={navigation}
+              onClick={handleClickLogin}
+              title="Hello There,"
+              message="Login untuk mengakses fitur ini"
+            />
+          ) : (
+            <>
+              <Text
+                style={{ paddingHorizontal: 10, paddingVertical: 10 }}
+                variant="labelMedium"
+              >
+                Penerima
+              </Text>
+              <View style={{ paddingHorizontal: 10, marginBottom: 20 }}>
+                <View
+                  style={{
+                    display: "flex",
+                    marginBottom: 20,
+                    gap: 10,
+                  }}
+                >
+                  <Controller
+                    control={control}
+                    rules={{ required: true }}
+                    name="phone"
+                    render={({ field: { onBlur, onChange, value } }) => (
+                      <TextInput
+                        mode="outlined"
+                        label="Nomor Telepon"
+                        value={value}
+                        onBlur={onBlur}
+                        onChangeText={onChange}
+                        right={
+                          <TextInput.Icon
+                            icon="contacts"
+                            onPress={handleClickContact}
+                          />
+                        }
                       />
-                    }
+                    )}
                   />
-                )}
-              />
-              <Controller
-                control={control}
-                rules={{ required: true }}
-                name="name"
-                render={({ field: { onBlur, onChange, value } }) => (
-                  <TextInput
-                    mode="outlined"
-                    label="Nama Panggilan"
-                    value={value}
-                    onBlur={onBlur}
-                    onChangeText={onChange}
+                  <Controller
+                    control={control}
+                    rules={{ required: true }}
+                    name="name"
+                    render={({ field: { onBlur, onChange, value } }) => (
+                      <TextInput
+                        mode="outlined"
+                        label="Nama Panggilan"
+                        value={value}
+                        onBlur={onBlur}
+                        onChangeText={onChange}
+                      />
+                    )}
                   />
-                )}
-              />
-              <Controller
-                control={control}
-                rules={{ required: true }}
-                name="note"
-                render={({ field: { onBlur, onChange, value } }) => (
-                  <TextInput
-                    mode="outlined"
-                    label="Ucapan"
-                    multiline
-                    value={value}
-                    onBlur={onBlur}
-                    onChangeText={onChange}
+                  <Controller
+                    control={control}
+                    rules={{ required: true }}
+                    name="note"
+                    render={({ field: { onBlur, onChange, value } }) => (
+                      <TextInput
+                        mode="outlined"
+                        label="Ucapan"
+                        multiline
+                        value={value}
+                        onBlur={onBlur}
+                        onChangeText={onChange}
+                      />
+                    )}
                   />
-                )}
-              />
-            </View>
-            <Button
-              mode="contained"
-              icon="gift"
-              onPress={handleSubmit(onSubmit)}
-            >
-              Kirim Hadiah
-            </Button>
-          </View>
+                </View>
+                <Button
+                  mode="contained"
+                  icon="gift"
+                  onPress={handleSubmit(onSubmit)}
+                >
+                  Kirim Hadiah
+                </Button>
+              </View>
+            </>
+          )}
         </>
       )}
     </>

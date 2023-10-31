@@ -2,8 +2,8 @@ import { createMaterialBottomTabNavigator } from "@react-navigation/material-bot
 import { useTheme } from "react-native-paper";
 
 import Transaction from "../components/Transaction";
+import MyGift from "../components/MyGift";
 import Menu from "../components/Menu";
-import Contact from "../components/Contact";
 
 const Tab = createMaterialBottomTabNavigator();
 
@@ -22,9 +22,9 @@ export default function MainScreen() {
         component={Transaction}
       />
       <Tab.Screen
-        name="Contact"
-        options={{ title: "Kontak", tabBarIcon: "account-multiple" }}
-        component={Contact}
+        name="MyGift"
+        options={{ title: "Hadiah", tabBarIcon: "gift-open" }}
+        component={MyGift}
       />
       <Tab.Screen
         name="Menu"
