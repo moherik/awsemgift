@@ -4,19 +4,22 @@ import {
   Button,
   Divider,
   IconButton,
+  List,
   Text,
   TextInput,
   TouchableRipple,
   useTheme,
 } from "react-native-paper";
 import { Controller, useForm } from "react-hook-form";
+import { Icon } from "react-native-elements";
 import Toast from "react-native-root-toast";
-
-import { currency } from "../lib/numberFormat";
-import api from "../lib/api";
 
 import { useLoader } from "./Loader";
 import LoginBanner from "./LoginBanner";
+
+import { currency } from "../lib/numberFormat";
+import { BASE_URL } from "../constants";
+import api from "../lib/api";
 
 const numColumns = 2;
 
@@ -31,6 +34,8 @@ export default function ProductDetail({
 }) {
   const [selectedProduct, setselectedProduct] = useState();
   const [isFavorite, setIsFavorite] = useState(item.isFavorite || false);
+  const [selectedPayment, setSelectedPayment] = useState();
+  const [paymentList, setPaymentList] = useState([]);
 
   const theme = useTheme();
   const { showModal, hideModal } = useLoader();
@@ -46,6 +51,16 @@ export default function ProductDetail({
     setValue("phone", contact.selectedItem?.phoneNumbers[0].number);
     setValue("name", contact.selectedItem?.name);
   }, [contact.selectedItem]);
+
+  useEffect(() => {
+    const getPaymentList = async () => {
+      await api.get("general/payment-list").then((res) => {
+        setPaymentList(res.data);
+      });
+    };
+
+    getPaymentList();
+  }, []);
 
   async function onSubmit({ phone, name, note }) {
     try {
@@ -118,10 +133,7 @@ export default function ProductDetail({
         </View>
       )}
       <Divider />
-      <Text
-        variant="labelMedium"
-        style={{ paddingHorizontal: 10, paddingVertical: 10 }}
-      >
+      <Text variant="labelMedium" style={styles.headerLabel}>
         Pilih Produk
       </Text>
       <View style={styles.productList}>
@@ -177,76 +189,129 @@ export default function ProductDetail({
             />
           ) : (
             <>
-              <Text
-                style={{ paddingHorizontal: 10, paddingVertical: 10 }}
-                variant="labelMedium"
-              >
+              <Text style={styles.headerLabel} variant="labelMedium">
                 Penerima
               </Text>
-              <View style={{ paddingHorizontal: 10, marginBottom: 20 }}>
-                <View
-                  style={{
-                    display: "flex",
-                    marginBottom: 20,
-                    gap: 10,
-                  }}
-                >
-                  <Controller
-                    control={control}
-                    rules={{ required: true }}
-                    name="phone"
-                    render={({ field: { onBlur, onChange, value } }) => (
-                      <TextInput
-                        mode="outlined"
-                        label="Nomor Telepon"
-                        value={value}
-                        onBlur={onBlur}
-                        onChangeText={onChange}
-                        right={
-                          <TextInput.Icon
-                            icon="contacts"
-                            onPress={handleClickContact}
-                          />
-                        }
+              <View style={styles.form}>
+                <Controller
+                  control={control}
+                  rules={{ required: true }}
+                  name="phone"
+                  render={({ field: { onBlur, onChange, value } }) => (
+                    <TextInput
+                      mode="outlined"
+                      label="Nomor Telepon"
+                      value={value}
+                      onBlur={onBlur}
+                      onChangeText={onChange}
+                      right={
+                        <TextInput.Icon
+                          icon="contacts"
+                          onPress={handleClickContact}
+                        />
+                      }
+                    />
+                  )}
+                />
+                <Controller
+                  control={control}
+                  rules={{ required: true }}
+                  name="name"
+                  render={({ field: { onBlur, onChange, value } }) => (
+                    <TextInput
+                      mode="outlined"
+                      label="Nama Panggilan"
+                      value={value}
+                      onBlur={onBlur}
+                      onChangeText={onChange}
+                    />
+                  )}
+                />
+                <Controller
+                  control={control}
+                  rules={{ required: true }}
+                  name="note"
+                  render={({ field: { onBlur, onChange, value } }) => (
+                    <TextInput
+                      mode="outlined"
+                      label="Ucapan"
+                      multiline
+                      value={value}
+                      onBlur={onBlur}
+                      onChangeText={onChange}
+                    />
+                  )}
+                />
+              </View>
+              <Text style={styles.headerLabel} variant="labelMedium">
+                Pembayaran
+              </Text>
+              {paymentList.map((payment, index) => (
+                <List.Item
+                  key={payment.id || index}
+                  title={payment.label}
+                  disabled={payment.balance <= 0}
+                  description={
+                    payment.id == "balance"
+                      ? payment.balance > 0 ||
+                        payment.balance < selectedProduct.price
+                        ? currency(payment.balance)
+                        : currency(payment.balance) +
+                          " - saldo Anda tidak mencukupi"
+                      : ""
+                  }
+                  left={(props) =>
+                    payment.icon ? (
+                      <List.Icon {...props} icon={payment.icon} />
+                    ) : (
+                      <Image
+                        {...props}
+                        width={22}
+                        height={22}
+                        source={{ uri: `${BASE_URL}/${payment.logo}` }}
                       />
-                    )}
-                  />
-                  <Controller
-                    control={control}
-                    rules={{ required: true }}
-                    name="name"
-                    render={({ field: { onBlur, onChange, value } }) => (
-                      <TextInput
-                        mode="outlined"
-                        label="Nama Panggilan"
-                        value={value}
-                        onBlur={onBlur}
-                        onChangeText={onChange}
+                    )
+                  }
+                  right={(props) =>
+                    payment.id == selectedPayment && (
+                      <Icon
+                        {...props}
+                        size={22}
+                        name="check-circle"
+                        color={theme.colors.primary}
                       />
-                    )}
-                  />
-                  <Controller
-                    control={control}
-                    rules={{ required: true }}
-                    name="note"
-                    render={({ field: { onBlur, onChange, value } }) => (
-                      <TextInput
-                        mode="outlined"
-                        label="Ucapan"
-                        multiline
-                        value={value}
-                        onBlur={onBlur}
-                        onChangeText={onChange}
-                      />
-                    )}
-                  />
-                </View>
+                    )
+                  }
+                  onPress={() => setSelectedPayment(payment.id)}
+                />
+              ))}
+              <List.Item
+                title="Total Bayar"
+                right={() => (
+                  <Text variant="titleMedium">
+                    {currency(selectedProduct.price)}
+                  </Text>
+                )}
+              />
+              <View
+                style={{
+                  paddingHorizontal: 10,
+                  marginBottom: 30,
+                }}
+              >
                 <Button
                   mode="contained"
                   icon="gift"
                   onPress={handleSubmit(onSubmit)}
                 >
                   Kirim Hadiah
+                </Button>
+                <Button
+                  style={{ marginTop: 10 }}
+                  mode="text"
+                  onPress={() => dismissModal()}
+                >
+                  Kembali
                 </Button>
               </View>
             </>
@@ -291,4 +356,11 @@ const styles = StyleSheet.create({
     display: "flex",
     gap: 2,
   },
+  form: {
+    display: "flex",
+    gap: 10,
+    paddingHorizontal: 10,
+    marginBottom: 10,
+  },
+  headerLabel: { paddingHorizontal: 10, paddingVertical: 10 },
 });
