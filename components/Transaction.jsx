@@ -21,6 +21,8 @@ import { BottomSheetModal, BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import { useNavigation } from "@react-navigation/native";
 import Toast from "react-native-root-toast";
 
+import { useLoader } from "./Loader";
+
 import useAuth from "../hooks/useAuth";
 import useContactList from "../hooks/useContactList";
 import api from "../lib/api";
@@ -40,6 +42,8 @@ export default function Transaction() {
   const [searchText, setSearchText] = useState();
   const [selectedItem, setSelectedItem] = useState();
   const [selectedCategory, setSelectedCategory] = useState();
+
+  const { showModal, hideModal } = useLoader();
 
   const theme = useTheme();
   const auth = useAuth();
@@ -264,6 +268,8 @@ export default function Transaction() {
               onClickProduct={() => {
                 bottomSheetModalRef.current?.snapToIndex(1);
               }}
+              showModal={showModal}
+              hideModal={hideModal}
             />
           )}
         </BottomSheetScrollView>

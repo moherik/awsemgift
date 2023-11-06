@@ -36,7 +36,7 @@ export default function LoaderProvider({ children }) {
             backgroundColor: "white",
             marginHorizontal: 20,
             borderRadius: 10,
-            padding: 15
+            padding: 15,
           }}
         >
           <ActivityIndicator animating={true} size={32} />

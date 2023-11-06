@@ -11,7 +11,6 @@ import {
   useTheme,
 } from "react-native-paper";
 import { Controller, useForm } from "react-hook-form";
-import { Icon } from "react-native-elements";
 import Toast from "react-native-root-toast";
 
 import { useLoader } from "./Loader";
@@ -31,6 +30,8 @@ export default function ProductDetail({
   navigation,
   onClickProduct,
   onClickFavorite,
+  showModal,
+  hideModal,
 }) {
   const [selectedProduct, setselectedProduct] = useState();
   const [isFavorite, setIsFavorite] = useState(item.isFavorite || false);
@@ -38,7 +39,6 @@ export default function ProductDetail({
   const [paymentList, setPaymentList] = useState([]);
 
   const theme = useTheme();
-  const { showModal, hideModal } = useLoader();
   const { control, handleSubmit, setValue } = useForm({
     defaultValues: {
       phone: "",
@@ -53,11 +53,11 @@ export default function ProductDetail({
   }, [contact.selectedItem]);
 
   useEffect(() => {
-    const getPaymentList = async () => {
+    async function getPaymentList() {
       await api.get("general/payment-list").then((res) => {
         setPaymentList(res.data);
       });
-    };
+    }
 
     getPaymentList();
   }, []);
@@ -72,10 +72,13 @@ export default function ProductDetail({
           phone,
           name,
           note,
+          type: selectedPayment.id,
         })
-        .then((response) => {
-          if (!response) throw new Error("Gagal menambahkan hadiah");
+        .then(async (response) => {
+          if (!response.status != 200)
+            throw new Error(response.message || "Gagal menambahkan hadiah");
 
+          await processPayment();
           console.log(response);
         });
     } catch (error) {
@@ -84,6 +87,8 @@ export default function ProductDetail({
       hideModal();
     }
   }
+
+  async function processPayment() {}
 
   function handleFavorite() {
     setIsFavorite(!isFavorite);
@@ -169,7 +174,9 @@ export default function ProductDetail({
                   >
                     {item.name}
                   </Text>
-                  <Text variant="bodyMedium">{currency(item.price)}</Text>
+                  <Text variant="bodyMedium">
+                    {currency(item.price + item.admin)}
+                  </Text>
                 </View>
               </TouchableRipple>
             </View>
@@ -229,7 +236,7 @@ export default function ProductDetail({
                 />
                 <Controller
                   control={control}
-                  rules={{ required: true }}
+                  rules={{ required: false }}
                   name="note"
                   render={({ field: { onBlur, onChange, value } }) => (
                     <TextInput
@@ -250,11 +257,13 @@ export default function ProductDetail({
                 <List.Item
                   key={payment.id || index}
                   title={payment.label}
-                  disabled={payment.balance <= 0}
+                  disabled={
+                    payment.balance <= 0 ||
+                    payment.balance < selectedProduct?.price
+                  }
                   description={
                     payment.id == "balance"
-                      ? payment.balance > 0 ||
-                        payment.balance < selectedProduct.price
+                      ? payment.balance > selectedProduct.price
                         ? currency(payment.balance)
                         : currency(payment.balance) +
                           " - saldo Anda tidak mencukupi"
@@ -274,10 +283,9 @@ export default function ProductDetail({
                   }
                   right={(props) =>
                     payment.id == selectedPayment && (
-                      <Icon
+                      <List.Icon
                         {...props}
-                        size={22}
-                        name="check-circle"
+                        icon="check-circle"
                         color={theme.colors.primary}
                       />
                     )

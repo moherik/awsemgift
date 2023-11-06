@@ -33,7 +33,7 @@ export default function ContactListProvider({ children }) {
         index={0}
         snapPoints={snapPoints}
       >
-        <BottomSheetScrollView>
+        <BottomSheetScrollView keyboardShouldPersistTaps="always">
           <ContactList enableScroll={false} onClickItem={onClickItem} />
         </BottomSheetScrollView>
       </BottomSheetModal>
