@@ -12,6 +12,7 @@ import {
 } from "react-native-paper";
 import { Controller, useForm } from "react-hook-form";
 import Toast from "react-native-root-toast";
+import * as WebBrowser from "expo-web-browser";
 
 import { useLoader } from "./Loader";
 import LoginBanner from "./LoginBanner";
@@ -72,14 +73,17 @@ export default function ProductDetail({
           phone,
           name,
           note,
-          type: selectedPayment.id,
+          type: selectedPayment,
         })
         .then(async (response) => {
-          if (!response.status != 200)
+          if (response.status != 200) {
             throw new Error(response.message || "Gagal menambahkan hadiah");
+          }
 
-          await processPayment();
-          console.log(response);
+          const data = response.data;
+          if (data.url) {
+            await WebBrowser.openBrowserAsync(data.url);
+          }
         });
     } catch (error) {
       Toast.show(error?.message || "Terjadi kesalahan");
@@ -87,8 +91,6 @@ export default function ProductDetail({
       hideModal();
     }
   }
-
-  async function processPayment() {}
 
   function handleFavorite() {
     setIsFavorite(!isFavorite);
@@ -297,7 +299,7 @@ export default function ProductDetail({
                 title="Total Bayar"
                 right={() => (
                   <Text variant="titleMedium">
-                    {currency(selectedProduct.price)}
+                    {currency(selectedProduct.price + selectedProduct.admin)}
                   </Text>
                 )}
               />
