@@ -27,9 +27,8 @@
         <action android:name="android.intent.action.VIEW"/>
         <category android:name="android.intent.category.DEFAULT"/>
         <category android:name="android.intent.category.BROWSABLE"/>
-        <data android:scheme="com.emas.awsempay"/>
         <data android:scheme="exp+awsem"/>
-        <data android:scheme="com.emas.awsemgift"/>
+        <data android:scheme="awsemgift"/>
       </intent-filter>
     </activity>
     <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" android:exported="false"/>

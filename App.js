@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import { AppRegistry, useColorScheme } from "react-native";
 import {
   PaperProvider,
@@ -16,11 +15,12 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { RootSiblingParent } from "react-native-root-siblings";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
+import * as Linking from "expo-linking";
 
 import theme from "./theme/custom";
 
 import HomeScreen from "./screen/HomeScreen";
-import PaymentScreen from "./screen/PaymentScreen";
+import PaymentSuccessScreen from "./screen/PaymentSuccessScreen";
 import TopupScreen from "./screen/TopupScreen";
 import AddContactScreen from "./screen/AddContactScreen";
 import ContactDetailScreen from "./screen/ContactDetailScreen";
@@ -60,7 +60,7 @@ export default function App() {
         <PaperProvider theme={combinedTheme}>
           <BottomSheetModalProvider>
             <CustomProvider>
-              <NavigationContainer theme={combinedTheme}>
+              <NavigationContainer>
                 <Stack.Navigator>
                   <Stack.Screen
                     name="Home"
@@ -71,9 +71,9 @@ export default function App() {
                     }}
                   />
                   <Stack.Screen
-                    name="Payment"
-                    component={PaymentScreen}
-                    options={({ route }) => ({ title: route.params.name })}
+                    name="PaymentSuccess"
+                    component={PaymentSuccessScreen}
+                    options={{ title: "Sukses" }}
                   />
                   <Stack.Screen
                     name="AddContact"

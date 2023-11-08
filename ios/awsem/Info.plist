@@ -27,7 +27,7 @@
       <dict>
         <key>CFBundleURLSchemes</key>
         <array>
-          <string>com.emas.awsemgift</string>
+          <string>awsemgift</string>
         </array>
       </dict>
       <dict>
@@ -55,7 +55,7 @@
       </dict>
     </dict>
     <key>NSContactsUsageDescription</key>
-    <string>Allow $(PRODUCT_NAME) to access your contacts</string>
+    <string>Allow $(PRODUCT_NAME) to access your contacts.</string>
     <key>UILaunchStoryboardName</key>
     <string>SplashScreen</string>
     <key>UIRequiredDeviceCapabilities</key>
@@ -82,5 +82,10 @@
     <string>Light</string>
     <key>UIViewControllerBasedStatusBarAppearance</key>
     <false/>
+    <key>LSApplicationQueriesSchemes</key>
+    <array>
+      <string>awsemgift</string>
+      <string>awsemgift://payment</string>
+    </array>
   </dict>
 </plist>

@@ -13,8 +13,8 @@ import {
 import { Controller, useForm } from "react-hook-form";
 import Toast from "react-native-root-toast";
 import * as WebBrowser from "expo-web-browser";
+import * as Linking from "expo-linking";
 
-import { useLoader } from "./Loader";
 import LoginBanner from "./LoginBanner";
 
 import { currency } from "../lib/numberFormat";
@@ -38,6 +38,15 @@ export default function ProductDetail({
   const [isFavorite, setIsFavorite] = useState(item.isFavorite || false);
   const [selectedPayment, setSelectedPayment] = useState();
   const [paymentList, setPaymentList] = useState([]);
+
+  const url = Linking.useURL();
+  if (url) {
+    const { hostname, path, queryParams } = Linking.parse(url);
+    if (hostname == "payment" && path == "success") {
+      navigation.navigate("PaymentSuccess");
+      dismissModal();
+    }
+  }
 
   const theme = useTheme();
   const { control, handleSubmit, setValue } = useForm({

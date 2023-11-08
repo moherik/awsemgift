@@ -20,6 +20,7 @@ import {
 import { BottomSheetModal, BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import { useNavigation } from "@react-navigation/native";
 import Toast from "react-native-root-toast";
+import * as Linking from "expo-linking";
 
 import { useLoader } from "./Loader";
 
