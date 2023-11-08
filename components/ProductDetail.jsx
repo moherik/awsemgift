@@ -67,6 +67,10 @@ export default function ProductDetail({
     try {
       showModal();
 
+      if (!selectedPayment) {
+        throw new Error("Pilih tipe pembayaran!");
+      }
+
       await api
         .post("gift/order", {
           productCode: selectedProduct.code,
@@ -264,7 +268,7 @@ export default function ProductDetail({
                     payment.balance < selectedProduct?.price
                   }
                   description={
-                    payment.id == "balance"
+                    payment.id == "BALANCE"
                       ? payment.balance > selectedProduct.price
                         ? currency(payment.balance)
                         : currency(payment.balance) +
