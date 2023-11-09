@@ -20,7 +20,7 @@ import * as Linking from "expo-linking";
 import theme from "./theme/custom";
 
 import HomeScreen from "./screen/HomeScreen";
-import PaymentSuccessScreen from "./screen/PaymentSuccessScreen";
+import PaymentResultScreen from "./screen/PaymentResultScreen";
 import TopupScreen from "./screen/TopupScreen";
 import AddContactScreen from "./screen/AddContactScreen";
 import ContactDetailScreen from "./screen/ContactDetailScreen";
@@ -71,9 +71,13 @@ export default function App() {
                     }}
                   />
                   <Stack.Screen
-                    name="PaymentSuccess"
-                    component={PaymentSuccessScreen}
-                    options={{ title: "Sukses" }}
+                    name="PaymentResult"
+                    component={PaymentResultScreen}
+                    options={{
+                      title: "Sukses",
+                      headerShown: false,
+                      presentation: "fullScreenModal",
+                    }}
                   />
                   <Stack.Screen
                     name="AddContact"

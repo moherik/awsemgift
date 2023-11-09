@@ -1,8 +1,52 @@
-import { View } from "react-native";
-import { Appbar, Text, useTheme } from "react-native-paper";
+import { useEffect, useState } from "react";
+import { FlatList, Image, View } from "react-native";
+import { Appbar, List, Text, useTheme } from "react-native-paper";
+import { useNavigation } from "@react-navigation/native";
+
+import api from "../lib/api";
+import useAuth from "../hooks/useAuth";
+import { dateFormat } from "../lib/formatter";
+import LoginBanner from "./LoginBanner";
 
 export default function MyGift() {
+  const [gifts, setGifts] = useState([]);
+  const [loading, setLoading] = useState(true);
+
   const theme = useTheme();
+  const navigation = useNavigation();
+  const auth = useAuth();
+
+  const mapStatus = {
+    "-1": {
+      color: theme.colors.secondary,
+      label: "Pending",
+    },
+    0: {
+      color: theme.colors.primary,
+      label: "Proses",
+    },
+  };
+
+  async function getHistoryGift() {
+    await api
+      .get("gifts")
+      .then((resp) => {
+        setGifts(resp.data);
+      })
+      .finally(() => setLoading(false));
+  }
+
+  useEffect(() => {
+    if (auth.userData) {
+      setTimeout(() => {
+        getHistoryGift();
+      }, 1000);
+    }
+  }, []);
+
+  function handleClickLogin() {
+    navigation.navigate("Login");
+  }
 
   return (
     <>
@@ -13,6 +57,65 @@ export default function MyGift() {
       >
         <Appbar.Content title="Hadiah Saya" />
       </Appbar.Header>
+      {auth.userData ? (
+        <FlatList
+          refreshing={loading}
+          onRefresh={getHistoryGift}
+          data={gifts}
+          renderItem={({ item }) => (
+            <List.Item
+              title={item.orderDetail.productData.name}
+              description={() => (
+                <View
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                  }}
+                >
+                  <Text>{item.billInfo2}</Text>
+                  <Text variant="bodySmall">
+                    {dateFormat(item.createdAt, "dd MMM yyyy hh:ii")}
+                  </Text>
+                </View>
+              )}
+              left={(props) => (
+                <Image
+                  style={{
+                    ...props.style,
+                    borderRadius: 10,
+                    width: 40,
+                    height: 40,
+                  }}
+                  source={{ uri: item.orderDetail?.productData?.group?.logo }}
+                />
+              )}
+              right={(_props) => (
+                <View
+                  style={{
+                    display: "flex",
+                    alignItems: "flex-end",
+                    justifyContent: "center",
+                  }}
+                >
+                  <Text
+                    style={{
+                      marginBottom: 2,
+                      color: mapStatus[item.status].color,
+                    }}
+                  >
+                    {mapStatus[item.status]?.label?.toUpperCase()}
+                  </Text>
+                </View>
+              )}
+              onPress={() =>
+                navigation.navigate("PaymentResult", { orderId: item.id })
+              }
+            />
+          )}
+        />
+      ) : (
+        <LoginBanner onClick={handleClickLogin} />
+      )}
     </>
   );
 }

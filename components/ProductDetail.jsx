@@ -17,7 +17,7 @@ import * as Linking from "expo-linking";
 
 import LoginBanner from "./LoginBanner";
 
-import { currency } from "../lib/numberFormat";
+import { currency } from "../lib/formatter";
 import { BASE_URL } from "../constants";
 import api from "../lib/api";
 
@@ -42,9 +42,9 @@ export default function ProductDetail({
   const url = Linking.useURL();
   if (url) {
     const { hostname, path, queryParams } = Linking.parse(url);
-    if (hostname == "payment" && path == "success") {
-      navigation.navigate("PaymentSuccess");
+    if (hostname == "payment" && path == "result") {
       dismissModal();
+      navigation.navigate("PaymentResult", { ...queryParams });
     }
   }
 
@@ -81,7 +81,7 @@ export default function ProductDetail({
       }
 
       await api
-        .post("gift/order", {
+        .post("gifts/order", {
           productCode: selectedProduct.code,
           phone,
           name,
@@ -89,13 +89,19 @@ export default function ProductDetail({
           type: selectedPayment,
         })
         .then(async (response) => {
+          console.log(response);
+
           if (response.status != 200) {
             throw new Error(response.message || "Gagal menambahkan hadiah");
           }
 
-          const data = response.data;
-          if (data.url) {
-            await WebBrowser.openBrowserAsync(data.url);
+          console.log(response.data);
+          const { url, orderId } = response.data;
+          console.log(url, orderId);
+          if (url) {
+            await WebBrowser.openBrowserAsync(url);
+          } else {
+            navigation.navigate("PaymentResult", { orderId });
           }
         });
     } catch (error) {
