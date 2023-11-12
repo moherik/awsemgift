@@ -1,13 +1,16 @@
 import { useEffect, useState } from "react";
-import { StyleSheet, View } from "react-native";
-import { Button, Text } from "react-native-paper";
+import { Share, StyleSheet, View } from "react-native";
+import { ActivityIndicator, Button, Text } from "react-native-paper";
+import LottieView from "lottie-react-native";
+import Toast from "react-native-root-toast";
 
 import api from "../lib/api";
 import { useLoader } from "../components/Loader";
 
 export default function PaymentResultScreen({ route, navigation }) {
+  const [orderData, setOrderData] = useState();
   const [loading, setLoading] = useState(true);
-  const [status, setStatus] = useState();
+
   const { orderId } = route.params;
 
   const { showModal, hideModal } = useLoader();
@@ -21,7 +24,13 @@ export default function PaymentResultScreen({ route, navigation }) {
           orderId,
         })
         .then((resp) => {
-          setStatus(resp.data.status);
+          setOrderData(resp.data);
+        })
+        .catch((err) => {
+          Toast.show(err?.message || "Terjadi kesalahan");
+          setTimeout(() => {
+            navigation.goBack();
+          }, 3000);
         })
         .finally(() => {
           setLoading(false);
@@ -29,17 +38,48 @@ export default function PaymentResultScreen({ route, navigation }) {
         });
     }
 
-    checkStatus(orderId);
+    setTimeout(() => {
+      checkStatus(orderId);
+    }, 3000);
   }, []);
+
+  async function handleSharing() {
+    try {
+      Share.share({ message: orderData?.message, url: orderData?.url }).catch();
+    } catch (error) {
+      Toast.show(error?.message || "Sharing error");
+    }
+  }
 
   return (
     <View style={styles.container}>
-      {!status && loading ? (
-        <Text>Loading...</Text>
-      ) : status == 0 ? (
+      {!orderData?.status && loading ? (
+        <ActivityIndicator />
+      ) : orderData?.status == 0 ? (
         <View style={styles.centered}>
-          <Text>Sukses</Text>
-          <Button onPress={() => navigation.goBack()}>Kembali</Button>
+          <LottieView
+            autoPlay
+            loop={false}
+            style={{
+              width: 200,
+              height: 200,
+            }}
+            source={require("../assets/lottie-success.json")}
+          />
+          <View style={{ gap: 2, marginBottom: 20 }}>
+            <Text style={{ textAlign: "center" }} variant="headlineSmall">
+              Hadiah Berhasil Ditambahkan
+            </Text>
+            <Text style={{ textAlign: "center" }} variant="titleSmall">
+              Bagikan link untuk mengambil hadiah
+            </Text>
+          </View>
+          <Button mode="contained" icon="link" onPress={handleSharing}>
+            Bagikan Link
+          </Button>
+          <Button style={{ marginTop: 20 }} onPress={() => navigation.goBack()}>
+            Kembali
+          </Button>
         </View>
       ) : (
         <Text>Not Sukses</Text>
@@ -58,5 +98,6 @@ const styles = StyleSheet.create({
   centered: {
     display: "flex",
     alignItems: "center",
+    textAlign: "center",
   },
 });

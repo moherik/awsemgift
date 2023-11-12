@@ -3,6 +3,7 @@ import { FlatList, Image, StyleSheet, View } from "react-native";
 import {
   Button,
   Divider,
+  HelperText,
   IconButton,
   List,
   Text,
@@ -49,7 +50,7 @@ export default function ProductDetail({
   }
 
   const theme = useTheme();
-  const { control, handleSubmit, setValue } = useForm({
+  const { control, handleSubmit, setValue, formState } = useForm({
     defaultValues: {
       phone: "",
       name: "",
@@ -89,8 +90,6 @@ export default function ProductDetail({
           type: selectedPayment,
         })
         .then(async (response) => {
-          console.log(response);
-
           if (response.status != 200) {
             throw new Error(response.message || "Gagal menambahkan hadiah");
           }
@@ -101,6 +100,7 @@ export default function ProductDetail({
           if (url) {
             await WebBrowser.openBrowserAsync(url);
           } else {
+            dismissModal();
             navigation.navigate("PaymentResult", { orderId });
           }
         });
@@ -127,6 +127,10 @@ export default function ProductDetail({
     setTimeout(() => {
       navigation?.navigate("Login");
     }, 100);
+  }
+
+  function hasError(form) {
+    return formState.errors[form] ? true : false;
   }
 
   return (
@@ -226,19 +230,27 @@ export default function ProductDetail({
                   rules={{ required: true }}
                   name="phone"
                   render={({ field: { onBlur, onChange, value } }) => (
-                    <TextInput
-                      mode="outlined"
-                      label="Nomor Telepon"
-                      value={value}
-                      onBlur={onBlur}
-                      onChangeText={onChange}
-                      right={
-                        <TextInput.Icon
-                          icon="contacts"
-                          onPress={handleClickContact}
-                        />
-                      }
-                    />
+                    <>
+                      <TextInput
+                        error={formState.errors.phone}
+                        mode="outlined"
+                        label="Nomor Telepon"
+                        value={value}
+                        onBlur={onBlur}
+                        onChangeText={onChange}
+                        right={
+                          <TextInput.Icon
+                            icon="contacts"
+                            onPress={handleClickContact}
+                          />
+                        }
+                      />
+                      {formState.errors.phone && (
+                        <HelperText type="error">
+                          Nomor telepon harus diisi
+                        </HelperText>
+                      )}
+                    </>
                   )}
                 />
                 <Controller
@@ -246,13 +258,19 @@ export default function ProductDetail({
                   rules={{ required: true }}
                   name="name"
                   render={({ field: { onBlur, onChange, value } }) => (
-                    <TextInput
-                      mode="outlined"
-                      label="Nama Panggilan"
-                      value={value}
-                      onBlur={onBlur}
-                      onChangeText={onChange}
-                    />
+                    <>
+                      <TextInput
+                        error={formState.errors.name}
+                        mode="outlined"
+                        label="Nama Panggilan"
+                        value={value}
+                        onBlur={onBlur}
+                        onChangeText={onChange}
+                      />
+                      {formState.errors.name && (
+                        <HelperText type="error">Nama harus diisi</HelperText>
+                      )}
+                    </>
                   )}
                 />
                 <Controller
@@ -288,7 +306,7 @@ export default function ProductDetail({
                         ? currency(payment.balance)
                         : currency(payment.balance) +
                           " - saldo Anda tidak mencukupi"
-                      : ""
+                      : payment.info
                   }
                   left={(props) =>
                     payment.icon ? (

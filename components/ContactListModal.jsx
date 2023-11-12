@@ -34,7 +34,11 @@ export default function ContactListProvider({ children }) {
         snapPoints={snapPoints}
       >
         <BottomSheetScrollView keyboardShouldPersistTaps="always">
-          <ContactList enableScroll={false} onClickItem={onClickItem} />
+          <ContactList
+            enableScroll={false}
+            onBack={() => dismiss()}
+            onClickItem={onClickItem}
+          />
         </BottomSheetScrollView>
       </BottomSheetModal>
     </ContactListContext.Provider>

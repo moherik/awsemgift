@@ -15,21 +15,19 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { RootSiblingParent } from "react-native-root-siblings";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
-import * as Linking from "expo-linking";
 
 import theme from "./theme/custom";
 
 import HomeScreen from "./screen/HomeScreen";
 import PaymentResultScreen from "./screen/PaymentResultScreen";
 import TopupScreen from "./screen/TopupScreen";
-import AddContactScreen from "./screen/AddContactScreen";
-import ContactDetailScreen from "./screen/ContactDetailScreen";
-import ReportDetailScreen from "./screen/ReportDetailScreen";
 import LoginScreen from "./screen/LoginScreen";
 import RegisterScreen from "./screen/RegisterScreen";
 import InboxScreen from "./screen/InboxScreen";
 
 import CustomProvider from "./components/CustomProvider";
+import GiftDetailScreen from "./screen/GiftDetailScreen";
+import FavoriteScreen from "./screen/FavoriteScreen";
 
 const { LightTheme, DarkTheme } = adaptNavigationTheme({
   reactNavigationLight: NavigationDefaultTheme,
@@ -80,20 +78,16 @@ export default function App() {
                     }}
                   />
                   <Stack.Screen
-                    name="AddContact"
-                    component={AddContactScreen}
-                    options={{ title: "Tambah Kontak" }}
+                    name="GiftDetail"
+                    component={GiftDetailScreen}
+                    options={{ title: "Detail Hadiah" }}
                   />
                   <Stack.Screen
-                    name="ContactDetail"
-                    component={ContactDetailScreen}
-                    options={{ title: "Detail Kontak" }}
+                    name="Favorite"
+                    component={FavoriteScreen}
+                    options={{ title: "Produk Favorit" }}
                   />
-                  <Stack.Screen
-                    name="ReportDetail"
-                    component={ReportDetailScreen}
-                    options={{ title: "Detail Laporan" }}
-                  />
+
                   <Stack.Screen
                     name="Topup"
                     component={TopupScreen}

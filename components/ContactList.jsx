@@ -5,7 +5,11 @@ import * as Contacts from "expo-contacts";
 
 let tempData = [];
 
-export default function ContactList({ onClickItem, enableScroll = true }) {
+export default function ContactList({
+  onClickItem,
+  onBack,
+  enableScroll = true,
+}) {
   const [contacts, setContacts] = useState([]);
   const [searchText, setSearchText] = useState();
 
@@ -51,6 +55,7 @@ export default function ContactList({ onClickItem, enableScroll = true }) {
             label="Cari kontak"
             dense
             style={{ backgroundColor: theme.colors.background }}
+            left={<TextInput.Icon icon="arrow-left" onPress={() => onBack()} />}
             right={
               <TextInput.Icon
                 icon={!searchText ? "magnify" : "close"}

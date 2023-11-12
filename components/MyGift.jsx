@@ -108,7 +108,7 @@ export default function MyGift() {
                 </View>
               )}
               onPress={() =>
-                navigation.navigate("PaymentResult", { orderId: item.id })
+                navigation.navigate("GiftDetail", { orderId: item.id })
               }
             />
           )}

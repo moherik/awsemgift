@@ -27,7 +27,9 @@ export default function Menu() {
       desc: "Produk favorit tersimpan",
       icon: "heart-circle",
       isActive: auth.userData,
-      onClick: () => {},
+      onClick: () => {
+        navigation.navigate("Favorite");
+      },
     },
     {
       id: 3,
@@ -66,29 +68,27 @@ export default function Menu() {
     <FlatList
       ListHeaderComponent={
         auth.userData ? (
-          <TouchableRipple
+          <Surface
             style={{ paddingTop: Constants.statusBarHeight }}
             onPress={() => {}}
           >
-            <Surface>
-              <View
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  paddingVertical: 20,
-                  paddingHorizontal: 20,
-                  gap: 15,
-                  alignItems: "center",
-                }}
-              >
-                <Avatar.Icon icon="account" size={38} />
-                <View>
-                  <Text variant="titleMedium">{auth.userData.name}</Text>
-                  <Text>{auth.userData.email}</Text>
-                </View>
+            <View
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                paddingVertical: 20,
+                paddingHorizontal: 20,
+                gap: 15,
+                alignItems: "center",
+              }}
+            >
+              <Avatar.Icon icon="account" size={38} />
+              <View>
+                <Text variant="titleMedium">{auth.userData.name}</Text>
+                <Text>{auth.userData.email}</Text>
               </View>
-            </Surface>
-          </TouchableRipple>
+            </View>
+          </Surface>
         ) : (
           <LoginBanner onClick={handleClickLogin} />
         )
