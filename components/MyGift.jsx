@@ -42,7 +42,7 @@ export default function MyGift() {
         getHistoryGift();
       }, 1000);
     }
-  }, []);
+  }, [auth.userData]);
 
   function handleClickLogin() {
     navigation.navigate("Login");
