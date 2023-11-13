@@ -28,6 +28,7 @@
         <key>CFBundleURLSchemes</key>
         <array>
           <string>awsemgift</string>
+          <string>com.emas.awsemgift</string>
         </array>
       </dict>
       <dict>
@@ -39,6 +40,11 @@
     </array>
     <key>CFBundleVersion</key>
     <string>1</string>
+    <key>LSApplicationQueriesSchemes</key>
+    <array>
+      <string>awsemgift</string>
+      <string>awsemgift://payment</string>
+    </array>
     <key>LSRequiresIPhoneOS</key>
     <true/>
     <key>NSAppTransportSecurity</key>
@@ -82,10 +88,5 @@
     <string>Light</string>
     <key>UIViewControllerBasedStatusBarAppearance</key>
     <false/>
-    <key>LSApplicationQueriesSchemes</key>
-    <array>
-      <string>awsemgift</string>
-      <string>awsemgift://payment</string>
-    </array>
   </dict>
 </plist>
