@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { View } from "react-native";
-import { Button, TextInput } from "react-native-paper";
+import { StyleSheet, View } from "react-native";
+import { Button, TextInput, useTheme } from "react-native-paper";
 import { Controller, useForm } from "react-hook-form";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import { useNavigation } from "@react-navigation/native";
@@ -8,13 +8,15 @@ import Toast from "react-native-root-toast";
 
 import useAuth from "../hooks/useAuth";
 import useLoader from "../hooks/useLoader";
+import api from "../lib/api";
 
 export default function LoginScreen() {
   const [showPassword, setShowPassword] = useState(false);
 
+  const { showLoader, dismissLoader } = useLoader();
   const navigation = useNavigation();
   const auth = useAuth();
-  const { showLoader, dismissLoader } = useLoader();
+  const theme = useTheme();
 
   const { control, handleSubmit } = useForm({
     defaultValues: {
@@ -23,13 +25,12 @@ export default function LoginScreen() {
     },
   });
 
-  async function onSubmit({ email, password }) {
+  async function handleSign({ email, password }) {
     try {
       showLoader();
 
       await auth.signIn({ email, password }).then((res) => {
-        if (!res) throw new Error("Gagal melakukan login");
-
+        if (res?.status != 200) throw new Error("Gagal melakukan login");
         navigation.goBack();
       });
     } catch (error) {
@@ -39,7 +40,7 @@ export default function LoginScreen() {
     }
   }
 
-  async function googleSign() {
+  async function handleGoogleSign() {
     GoogleSignin.configure();
 
     try {
@@ -48,20 +49,46 @@ export default function LoginScreen() {
 
       showLoader();
 
+      const authId = userInfo.user.id;
       const email = userInfo.user.email;
       const password = userInfo.user.id;
-      await auth.signIn({ email, password, type: "google" }).then((res) => {
-        console.log(res);
-        if (res?.code == "need-bind") {
-          console.log("bind hehe");
-        } else if (res?.status != 200) {
-          throw new Error(res?.message || "Gagal melakukan login");
-        } else {
+      await auth
+        .signIn({ email, password, type: "google" })
+        .then(async (res) => {
+          if (res?.code == "need-bind") {
+            return await bindAccount({ email, authId, type: "google" });
+          } else if (res?.status != 200) {
+            throw new Error(res?.message || "Gagal melakukan login");
+          }
+
           navigation.goBack();
-        }
+        });
+    } catch (err) {
+      Toast.show(err.message || "Terjadi kesalahan");
+    } finally {
+      dismissLoader();
+    }
+  }
+
+  async function bindAccount({ email, authId, type }) {
+    showLoader();
+
+    try {
+      const binding = await api.post("auth/bind", {
+        email,
+        authId,
+        type,
       });
-    } catch (error) {
-      Toast.show(error.message || "Terjadi kesalahan");
+      if (!binding) {
+        throw new Error("Error binding account");
+      }
+
+      await auth.signIn({ email, password: authId, type }).then((res) => {
+        if (res?.status != 200) throw new Error("Gagal melakukan login");
+        navigation.goBack();
+      });
+    } catch (err) {
+      Toast.show(err.message || "Terjadi kesalahan");
     } finally {
       dismissLoader();
     }
@@ -70,9 +97,8 @@ export default function LoginScreen() {
   return (
     <View
       style={{
-        display: "flex",
-        alignItems: "center",
-        flex: 1,
+        ...styles.container,
+        backgroundColor: theme.colors.background,
       }}
     >
       <View
@@ -123,10 +149,14 @@ export default function LoginScreen() {
           />
         </View>
         <View style={{ display: "flex", gap: 10 }}>
-          <Button mode="contained" onPress={handleSubmit(onSubmit)}>
+          <Button mode="contained" onPress={handleSubmit(handleSign)}>
             Masuk
           </Button>
-          <Button mode="contained-tonal" onPress={googleSign} icon="google">
+          <Button
+            mode="contained-tonal"
+            onPress={handleGoogleSign}
+            icon="google"
+          >
             Masuk Dengan Google
           </Button>
           <Button mode="text" onPress={() => navigation.navigate("Register")}>
@@ -137,3 +167,10 @@ export default function LoginScreen() {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    display: "flex",
+    flex: 1,
+  },
+});

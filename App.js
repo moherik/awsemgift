@@ -102,8 +102,16 @@ export default function App() {
                     component={InboxScreen}
                     options={{ title: "Inbox" }}
                   />
-                  <Stack.Screen name="Login" component={LoginScreen} />
-                  <Stack.Screen name="Register" component={RegisterScreen} />
+                  <Stack.Screen
+                    name="Login"
+                    component={LoginScreen}
+                    options={{ title: "Masuk" }}
+                  />
+                  <Stack.Screen
+                    name="Register"
+                    component={RegisterScreen}
+                    options={{ title: "Daftar" }}
+                  />
                 </Stack.Navigator>
               </NavigationContainer>
             </CustomProvider>

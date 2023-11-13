@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { FlatList, View } from "react-native";
+import { BackHandler, FlatList, View } from "react-native";
 import { List, TextInput } from "react-native-paper";
 import * as Contacts from "expo-contacts";
 
@@ -44,6 +44,20 @@ export default function ContactList({
 
     setContacts(filteredData);
   }, [searchText]);
+
+  useEffect(() => {
+    async function backAction() {
+      onBack();
+      return true;
+    }
+
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      backAction
+    );
+
+    return () => backHandler.remove();
+  }, []);
 
   return (
     <FlatList

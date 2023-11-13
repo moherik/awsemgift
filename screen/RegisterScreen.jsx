@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { Button, Text, TextInput, useTheme } from "react-native-paper";
 import { Controller, useForm } from "react-hook-form";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
@@ -10,6 +10,8 @@ import useLoader from "../hooks/useLoader";
 export default function RegisterScreen() {
   const [userInfo, setUserInfo] = useState();
   const { showLoader, dismissLoader } = useLoader();
+
+  const theme = useTheme();
 
   const { control, handleSubmit, setValue } = useForm({
     defaultValues: {
@@ -45,7 +47,13 @@ export default function RegisterScreen() {
   }
 
   return (
-    <View style={{ padding: 20 }}>
+    <View
+      style={{
+        ...styles.container,
+        padding: 20,
+        backgroundColor: theme.colors.background,
+      }}
+    >
       <View style={{ display: "flex", gap: 10, marginBottom: 20 }}>
         <Controller
           control={control}
@@ -109,3 +117,10 @@ export default function RegisterScreen() {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    display: "flex",
+    flex: 1,
+  },
+});

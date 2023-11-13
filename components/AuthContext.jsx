@@ -1,4 +1,5 @@
 import React, { createContext, useEffect, useState } from "react";
+import { GoogleSignin } from "@react-native-google-signin/google-signin";
 
 import {
   deleteAccessToken,
@@ -48,7 +49,7 @@ export default function AuthProvider({ children }) {
 
           setuserData(userData);
 
-          return data;
+          return response;
         }
 
         return false;
@@ -61,6 +62,7 @@ export default function AuthProvider({ children }) {
   async function signOut() {
     await deleteAccessToken();
     await deleteRefreshToken();
+    await GoogleSignin.signOut();
 
     setuserData(undefined);
   }

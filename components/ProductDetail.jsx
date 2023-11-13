@@ -1,5 +1,12 @@
 import { useEffect, useState } from "react";
-import { FlatList, Image, StyleSheet, View } from "react-native";
+import {
+  Alert,
+  BackHandler,
+  FlatList,
+  Image,
+  StyleSheet,
+  View,
+} from "react-native";
 import {
   Button,
   Divider,
@@ -75,6 +82,20 @@ export default function ProductDetail({
       getPaymentList();
     }
   }, [auth.userData]);
+
+  useEffect(() => {
+    async function backAction() {
+      dismissModal();
+      return true;
+    }
+
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      backAction
+    );
+
+    return () => backHandler.remove();
+  }, []);
 
   async function onSubmit({ phone, name, note }) {
     try {
@@ -341,11 +362,11 @@ export default function ProductDetail({
               <View style={{ marginVertical: 20, gap: 10 }}>
                 <View style={styles.row}>
                   <Text>Produk</Text>
-                  <Text variant="labelMedium">{selectedProduct.name}</Text>
+                  <Text variant="labelLarge">{selectedProduct.name}</Text>
                 </View>
                 <View style={styles.row}>
                   <Text>Total Bayar</Text>
-                  <Text variant="labelMedium">
+                  <Text variant="labelLarge">
                     {currency(selectedProduct.price + selectedProduct.admin)}
                   </Text>
                 </View>
