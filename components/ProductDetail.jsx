@@ -32,13 +32,14 @@ export default function ProductDetail({
   navigation,
   onClickProduct,
   onClickFavorite,
-  showModal,
-  hideModal,
+  showLoader,
+  dismissLoader,
 }) {
   const [selectedProduct, setselectedProduct] = useState();
   const [isFavorite, setIsFavorite] = useState(item.isFavorite || false);
   const [selectedPayment, setSelectedPayment] = useState();
   const [paymentList, setPaymentList] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const url = Linking.useURL();
   if (url) {
@@ -70,12 +71,14 @@ export default function ProductDetail({
       });
     }
 
-    getPaymentList();
-  }, []);
+    if (auth.userData) {
+      getPaymentList();
+    }
+  }, [auth.userData]);
 
   async function onSubmit({ phone, name, note }) {
     try {
-      showModal();
+      showLoader();
 
       if (!selectedPayment) {
         throw new Error("Pilih tipe pembayaran!");
@@ -101,13 +104,15 @@ export default function ProductDetail({
             await WebBrowser.openBrowserAsync(url);
           } else {
             dismissModal();
-            navigation.navigate("PaymentResult", { orderId });
+            setTimeout(() => {
+              navigation.navigate("PaymentResult", { orderId });
+            }, 300);
           }
         });
     } catch (error) {
       Toast.show(error?.message || "Terjadi kesalahan");
     } finally {
-      hideModal();
+      dismissLoader();
     }
   }
 
@@ -240,7 +245,7 @@ export default function ProductDetail({
                         onChangeText={onChange}
                         right={
                           <TextInput.Icon
-                            icon="contacts"
+                            icon="contacts-outline"
                             onPress={handleClickContact}
                           />
                         }
@@ -294,6 +299,7 @@ export default function ProductDetail({
               </Text>
               {paymentList.map((payment, index) => (
                 <List.Item
+                  style={{ paddingVertical: 2 }}
                   key={payment.id || index}
                   title={payment.label}
                   disabled={
@@ -332,18 +338,21 @@ export default function ProductDetail({
                   onPress={() => setSelectedPayment(payment.id)}
                 />
               ))}
-              <List.Item
-                title="Total Bayar"
-                right={() => (
-                  <Text variant="titleMedium">
+              <View style={{ marginVertical: 20, gap: 10 }}>
+                <View style={styles.row}>
+                  <Text>Produk</Text>
+                  <Text variant="labelMedium">{selectedProduct.name}</Text>
+                </View>
+                <View style={styles.row}>
+                  <Text>Total Bayar</Text>
+                  <Text variant="labelMedium">
                     {currency(selectedProduct.price + selectedProduct.admin)}
                   </Text>
-                )}
-              />
+                </View>
+              </View>
               <View
                 style={{
                   paddingHorizontal: 10,
-                  marginBottom: 30,
                 }}
               >
                 <Button
@@ -353,18 +362,18 @@ export default function ProductDetail({
                 >
                   Kirim Hadiah
                 </Button>
-                <Button
-                  style={{ marginTop: 10 }}
-                  mode="text"
-                  onPress={() => dismissModal()}
-                >
-                  Kembali
-                </Button>
               </View>
             </>
           )}
         </>
       )}
+      <Button
+        style={{ marginHorizontal: 15, marginVertical: 10 }}
+        mode="text"
+        onPress={() => dismissModal()}
+      >
+        Kembali
+      </Button>
     </>
   );
 }
@@ -410,4 +419,11 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   headerLabel: { paddingHorizontal: 10, paddingVertical: 10 },
+  row: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginHorizontal: 15,
+  },
 });

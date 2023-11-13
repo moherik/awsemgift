@@ -6,6 +6,7 @@ import { useNavigation } from "@react-navigation/native";
 import api from "../lib/api";
 import useAuth from "../hooks/useAuth";
 import { dateFormat } from "../lib/formatter";
+
 import LoginBanner from "./LoginBanner";
 
 export default function MyGift() {
@@ -22,6 +23,10 @@ export default function MyGift() {
       label: "Pending",
     },
     0: {
+      color: theme.colors.primary,
+      label: "Ready",
+    },
+    1: {
       color: theme.colors.primary,
       label: "Proses",
     },
@@ -107,11 +112,21 @@ export default function MyGift() {
                   </Text>
                 </View>
               )}
-              onPress={() =>
-                navigation.navigate("GiftDetail", { orderId: item.id })
-              }
+              onPress={() => navigation.navigate("GiftDetail", { item: item })}
             />
           )}
+          ListEmptyComponent={
+            <View
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                marginVertical: 50,
+              }}
+            >
+              <Text>Tidak ada data</Text>
+            </View>
+          }
         />
       ) : (
         <LoginBanner onClick={handleClickLogin} />

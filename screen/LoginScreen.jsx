@@ -1,17 +1,21 @@
-import { useNavigation } from "@react-navigation/native";
+import { useState } from "react";
 import { View } from "react-native";
-import { Button, TextInput, useTheme } from "react-native-paper";
+import { Button, TextInput } from "react-native-paper";
 import { Controller, useForm } from "react-hook-form";
+import { GoogleSignin } from "@react-native-google-signin/google-signin";
+import { useNavigation } from "@react-navigation/native";
 import Toast from "react-native-root-toast";
 
-import { useLoader } from "../components/Loader";
 import useAuth from "../hooks/useAuth";
+import useLoader from "../hooks/useLoader";
 
 export default function LoginScreen() {
+  const [showPassword, setShowPassword] = useState(false);
+
   const navigation = useNavigation();
   const auth = useAuth();
+  const { showLoader, dismissLoader } = useLoader();
 
-  const { showModal, hideModal } = useLoader();
   const { control, handleSubmit } = useForm({
     defaultValues: {
       email: "",
@@ -21,9 +25,9 @@ export default function LoginScreen() {
 
   async function onSubmit({ email, password }) {
     try {
-      showModal();
+      showLoader();
 
-      await auth.signIn(email, password).then((res) => {
+      await auth.signIn({ email, password }).then((res) => {
         if (!res) throw new Error("Gagal melakukan login");
 
         navigation.goBack();
@@ -31,7 +35,35 @@ export default function LoginScreen() {
     } catch (error) {
       Toast.show(error?.message || "Terjadi kesalahan");
     } finally {
-      hideModal();
+      dismissLoader();
+    }
+  }
+
+  async function googleSign() {
+    GoogleSignin.configure();
+
+    try {
+      await GoogleSignin.hasPlayServices();
+      const userInfo = await GoogleSignin.signIn();
+
+      showLoader();
+
+      const email = userInfo.user.email;
+      const password = userInfo.user.id;
+      await auth.signIn({ email, password, type: "google" }).then((res) => {
+        console.log(res);
+        if (res?.code == "need-bind") {
+          console.log("bind hehe");
+        } else if (res?.status != 200) {
+          throw new Error(res?.message || "Gagal melakukan login");
+        } else {
+          navigation.goBack();
+        }
+      });
+    } catch (error) {
+      Toast.show(error.message || "Terjadi kesalahan");
+    } finally {
+      dismissLoader();
     }
   }
 
@@ -75,10 +107,17 @@ export default function LoginScreen() {
               <TextInput
                 mode="outlined"
                 textContentType="password"
+                secureTextEntry={!showPassword}
                 label="Kata Sandi"
                 value={value}
                 onBlur={onBlur}
                 onChangeText={onChange}
+                right={
+                  <TextInput.Icon
+                    icon={!showPassword ? "eye-outline" : "eye-off-outline"}
+                    onPress={() => setShowPassword(!showPassword)}
+                  />
+                }
               />
             )}
           />
@@ -86,6 +125,9 @@ export default function LoginScreen() {
         <View style={{ display: "flex", gap: 10 }}>
           <Button mode="contained" onPress={handleSubmit(onSubmit)}>
             Masuk
+          </Button>
+          <Button mode="contained-tonal" onPress={googleSign} icon="google">
+            Masuk Dengan Google
           </Button>
           <Button mode="text" onPress={() => navigation.navigate("Register")}>
             Daftar Sekarang

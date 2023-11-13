@@ -5,7 +5,7 @@ import LottieView from "lottie-react-native";
 import Toast from "react-native-root-toast";
 
 import api from "../lib/api";
-import { useLoader } from "../components/Loader";
+import useLoader from "../hooks/useLoader";
 
 export default function PaymentResultScreen({ route, navigation }) {
   const [orderData, setOrderData] = useState();
@@ -13,11 +13,11 @@ export default function PaymentResultScreen({ route, navigation }) {
 
   const { orderId } = route.params;
 
-  const { showModal, hideModal } = useLoader();
+  const { showLoader, dismissLoader } = useLoader();
 
   useEffect(() => {
     async function checkStatus(orderId) {
-      showModal();
+      showLoader();
 
       await api
         .post("/gifts/status", {
@@ -34,7 +34,7 @@ export default function PaymentResultScreen({ route, navigation }) {
         })
         .finally(() => {
           setLoading(false);
-          hideModal();
+          dismissLoader();
         });
     }
 
@@ -70,7 +70,7 @@ export default function PaymentResultScreen({ route, navigation }) {
             <Text style={{ textAlign: "center" }} variant="headlineSmall">
               Hadiah Berhasil Ditambahkan
             </Text>
-            <Text style={{ textAlign: "center" }} variant="titleSmall">
+            <Text style={{ textAlign: "center" }} variant="bodyMedium">
               Bagikan link untuk mengambil hadiah
             </Text>
           </View>

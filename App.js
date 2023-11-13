@@ -80,7 +80,11 @@ export default function App() {
                   <Stack.Screen
                     name="GiftDetail"
                     component={GiftDetailScreen}
-                    options={{ title: "Detail Hadiah" }}
+                    options={({ route }) => ({
+                      title:
+                        route.params?.item?.orderDetail?.productData?.name ||
+                        "Detail",
+                    })}
                   />
                   <Stack.Screen
                     name="Favorite"

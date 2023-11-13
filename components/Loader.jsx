@@ -2,29 +2,28 @@ import { createContext, useContext, useState } from "react";
 import { ActivityIndicator, Modal, Portal, Text } from "react-native-paper";
 
 const initialState = {
-  showModal: () => {},
-  hideModal: () => {},
+  showLoader: () => {},
+  dismissLoader: () => {},
 };
-const LoaderContext = createContext(initialState);
-export const useLoader = () => useContext(LoaderContext);
+export const LoaderContext = createContext(initialState);
 
 export default function LoaderProvider({ children }) {
   const [visible, setVisible] = useState(false);
 
-  function showModal() {
+  function showLoader() {
     setVisible(true);
   }
 
-  function hideModal() {
+  function dismissLoader() {
     setVisible(false);
   }
 
   return (
-    <LoaderContext.Provider value={{ showModal, hideModal }}>
+    <LoaderContext.Provider value={{ showLoader, dismissLoader }}>
       <Portal>
         <Modal
           visible={visible}
-          onDismiss={hideModal}
+          onDismiss={dismissLoader}
           dismissableBackButton={false}
           dismissable={false}
           style={{

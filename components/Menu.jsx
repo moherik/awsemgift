@@ -25,7 +25,7 @@ export default function Menu() {
       id: 1,
       name: "Favorit",
       desc: "Produk favorit tersimpan",
-      icon: "heart-circle",
+      icon: "heart-multiple-outline",
       isActive: auth.userData,
       onClick: () => {
         navigation.navigate("Favorite");
@@ -35,7 +35,7 @@ export default function Menu() {
       id: 3,
       name: "Bantuan",
       desc: "Pusat bantuan, hubungi kami",
-      icon: "help-box",
+      icon: "help-circle-outline",
       isActive: true,
       onClick: () => {},
     },

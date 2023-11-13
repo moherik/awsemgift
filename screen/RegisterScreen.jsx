@@ -1,15 +1,17 @@
-import { useNavigation } from "@react-navigation/native";
+import { useState } from "react";
 import { View } from "react-native";
-import { Button, TextInput, useTheme } from "react-native-paper";
+import { Button, Text, TextInput, useTheme } from "react-native-paper";
 import { Controller, useForm } from "react-hook-form";
+import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import Toast from "react-native-root-toast";
 
-import { useLoader } from "../components/Loader";
+import useLoader from "../hooks/useLoader";
 
 export default function RegisterScreen() {
-  const { showModal, hideModal } = useLoader();
+  const [userInfo, setUserInfo] = useState();
+  const { showLoader, dismissLoader } = useLoader();
 
-  const { control, handleSubmit } = useForm({
+  const { control, handleSubmit, setValue } = useForm({
     defaultValues: {
       name: "",
       email: "",
@@ -19,12 +21,26 @@ export default function RegisterScreen() {
 
   async function onSubmit({ name, email, password }) {
     try {
-      showModal();
-
+      showLoader();
     } catch (error) {
       Toast.show("Terjadi kesalahan");
     } finally {
-      hideModal();
+      dismissLoader();
+    }
+  }
+
+  async function googleSign() {
+    GoogleSignin.configure();
+
+    try {
+      await GoogleSignin.hasPlayServices();
+      const userInfo = await GoogleSignin.signIn();
+
+      setUserInfo(userInfo);
+    } catch (err) {
+      Toast.show(err.message || "Terjadi kesalahan");
+    } finally {
+      dismissLoader();
     }
   }
 
@@ -76,9 +92,18 @@ export default function RegisterScreen() {
           )}
         />
       </View>
-      <View style={{ display: "flex", gap: 10 }}>
+      <View
+        style={{
+          display: "flex",
+          gap: 10,
+        }}
+      >
         <Button mode="contained" onPress={handleSubmit(onSubmit)}>
           Daftar Sekarang
+        </Button>
+        <Text style={{ textAlign: "center" }}>atau</Text>
+        <Button mode="contained-tonal" onPress={googleSign} icon="google">
+          Daftar Dengan Google
         </Button>
       </View>
     </View>

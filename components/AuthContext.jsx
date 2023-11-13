@@ -30,9 +30,9 @@ export default function AuthProvider({ children }) {
     setuserData(undefined);
   }
 
-  async function signIn(email, password) {
+  async function signIn({ email, password, type = "email" }) {
     return await api
-      .post("auth/signin", { email, password })
+      .post("auth/signin", { email, password, type })
       .then(async (response) => {
         const data = response?.data;
 
@@ -48,13 +48,13 @@ export default function AuthProvider({ children }) {
 
           setuserData(userData);
 
-          return true;
+          return data;
         }
 
         return false;
       })
       .catch((err) => {
-        return false;
+        return err;
       });
   }
 
