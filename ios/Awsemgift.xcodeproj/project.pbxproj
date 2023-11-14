@@ -326,7 +326,7 @@
 					"-lc++",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.emas.awsemgift";
-				PRODUCT_NAME = "Awsemgift";
+				PRODUCT_NAME = "AwsemGift";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -353,7 +353,7 @@
 					"-lc++",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.emas.awsemgift";
-				PRODUCT_NAME = "Awsemgift";
+				PRODUCT_NAME = "AwsemGift";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 				TARGETED_DEVICE_FAMILY = "1,2";

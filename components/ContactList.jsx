@@ -63,7 +63,6 @@ export default function ContactList({
 
   return (
     <FlatList
-      style={{ backgroundColor: theme.colors.background }}
       ListHeaderComponent={
         <View style={{ flex: 1 }}>
           <TextInput

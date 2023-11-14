@@ -37,7 +37,9 @@ export default function ContactListProvider({ children, theme }) {
         handleStyle={{ backgroundColor: theme.colors.background }}
         handleIndicatorStyle={{ backgroundColor: theme.colors.inverseSurface }}
       >
-        <BottomSheetScrollView keyboardShouldPersistTaps="always">
+        <BottomSheetScrollView
+          style={{ backgroundColor: theme.colors.background }}
+        >
           <ContactList
             enableScroll={false}
             onBack={() => dismiss()}

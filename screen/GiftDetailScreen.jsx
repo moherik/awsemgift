@@ -3,6 +3,7 @@ import { Image, Share, StyleSheet, View } from "react-native";
 import {
   ActivityIndicator,
   Button,
+  Chip,
   Divider,
   IconButton,
   List,
@@ -19,6 +20,7 @@ import api from "../lib/api";
 import PaymentList from "../components/PaymentList";
 import useAuth from "../hooks/useAuth";
 import useLoader from "../hooks/useLoader";
+import { giftStatus } from "../constants";
 
 export default function GiftDetailScreen({ route, navigation }) {
   const item = route.params?.item;
@@ -42,20 +44,7 @@ export default function GiftDetailScreen({ route, navigation }) {
     }
   }
 
-  const mapStatus = {
-    "-1": {
-      color: theme.colors.secondary,
-      label: "Pending",
-    },
-    0: {
-      color: theme.colors.primary,
-      label: "Ready",
-    },
-    1: {
-      color: theme.colors.primary,
-      label: "Proses",
-    },
-  };
+  const mapStatus = giftStatus(theme);
 
   async function checkStatus(orderId) {
     setLoading(true);
@@ -130,10 +119,10 @@ export default function GiftDetailScreen({ route, navigation }) {
   async function copyToClipboard() {
     await Clipboard.setStringAsync(item?.id)
       .then(() => {
-        Toast.show("Order id copied to clipboard");
+        Toast.show("Berhasil disalin");
       })
       .catch((err) => {
-        Toast.show("Error copying to clipboard");
+        Toast.show("Terjadi kesalahan");
       });
   }
 
@@ -185,18 +174,20 @@ export default function GiftDetailScreen({ route, navigation }) {
           />
         )}
         right={(_props) => (
-          <View
-            style={{
-              display: "flex",
-              alignItems: "flex-end",
-              justifyContent: "center",
-            }}
-          >
-            <Text style={{ color: mapStatus[item.status].color }}>
-              {mapStatus[item.status]?.label?.toUpperCase()}
-            </Text>
+          <View style={styles.right}>
+            <Chip>
+              <Text style={{ color: mapStatus[item.status].color }}>
+                {mapStatus[item.status]?.label?.toUpperCase()}
+              </Text>
+            </Chip>
           </View>
         )}
+      />
+      <List.Item
+        style={{ backgroundColor: theme.colors.background }}
+        title={mapStatus[item.status]?.info}
+        titleNumberOfLines={3}
+        left={(props) => <List.Icon {...props} icon="help-circle-outline" />}
       />
       <List.Item
         style={{ backgroundColor: theme.colors.background }}
@@ -274,5 +265,10 @@ const styles = StyleSheet.create({
   },
   divider: {
     marginVertical: 4,
+  },
+  right: {
+    display: "flex",
+    alignItems: "flex-end",
+    justifyContent: "center",
   },
 });

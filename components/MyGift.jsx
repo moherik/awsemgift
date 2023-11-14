@@ -8,6 +8,7 @@ import useAuth from "../hooks/useAuth";
 import { dateFormat } from "../lib/formatter";
 
 import LoginBanner from "./LoginBanner";
+import { giftStatus } from "../constants";
 
 export default function MyGift() {
   const [gifts, setGifts] = useState([]);
@@ -17,20 +18,7 @@ export default function MyGift() {
   const navigation = useNavigation();
   const auth = useAuth();
 
-  const mapStatus = {
-    "-1": {
-      color: theme.colors.secondary,
-      label: "Pending",
-    },
-    0: {
-      color: theme.colors.primary,
-      label: "Ready",
-    },
-    1: {
-      color: theme.colors.primary,
-      label: "Proses",
-    },
-  };
+  const mapStatus = giftStatus(theme);
 
   async function getHistoryGift() {
     setLoading(true);

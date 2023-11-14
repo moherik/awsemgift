@@ -141,7 +141,7 @@ export default function Transaction() {
           backgroundColor: theme.colors.primaryContainer,
         }}
       >
-        <Appbar.Content title="Awsemgift" />
+        <Appbar.Content title="AwsemGift" />
         <Appbar.Action icon="bell-outline" onPress={() => {}} />
       </Appbar.Header>
       <FlatList

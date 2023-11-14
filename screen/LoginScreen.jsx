@@ -62,6 +62,7 @@ export default function LoginScreen() {
           navigation.goBack();
         });
     } catch (err) {
+      await GoogleSignin.signOut();
       Toast.show(err.message || "Terjadi kesalahan");
     } finally {
       dismissLoader();
