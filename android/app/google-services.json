@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "107259942901",
+    "project_id": "awsem-gift",
+    "storage_bucket": "awsem-gift.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:107259942901:android:af7b38f54d63bf66b6f2bc",
+        "android_client_info": {
+          "package_name": "com.emas.awsemgift"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDj56x1S5GbCordddFRbK6mM21FQi8lR5E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
