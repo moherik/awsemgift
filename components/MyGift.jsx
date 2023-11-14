@@ -33,9 +33,9 @@ export default function MyGift() {
 
   useEffect(() => {
     if (auth.userData) {
-      setTimeout(() => {
-        getHistoryGift();
-      }, 1000);
+      setGifts([]);
+
+      getHistoryGift();
     }
   }, [auth.userData]);
 

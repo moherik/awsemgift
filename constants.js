@@ -3,14 +3,14 @@ export const FIELD_TYPE = {
   SELECT_OPTION: "selectOption",
 };
 
-export const BASE_URL = "https://app.awsemgift.com";
+export const BASE_URL = "http://10.0.2.2:3000";
 
 export function giftStatus(theme) {
   return {
     "-1": {
       color: theme.colors.secondary,
       label: "Pending",
-      info: "Belum dibayar",
+      info: "Menunggu Pembayaran",
     },
     0: {
       color: theme.colors.tertiary,

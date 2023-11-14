@@ -1,5 +1,5 @@
 import { useNavigation } from "@react-navigation/native";
-import { FlatList, View } from "react-native";
+import { Alert, FlatList, View } from "react-native";
 import {
   Avatar,
   Divider,
@@ -13,6 +13,7 @@ import Constants from "expo-constants";
 import * as WebBrowser from "expo-web-browser";
 
 import useAuth from "../hooks/useAuth";
+import { currency } from "../lib/formatter";
 
 import LoginBanner from "./LoginBanner";
 
@@ -23,6 +24,13 @@ export default function Menu() {
   const auth = useAuth();
 
   const data = [
+    {
+      id: 0,
+      name: currency(auth.userData?.balance),
+      desc: "Saldo Anda",
+      icon: "cash-multiple",
+      isActive: auth.userData,
+    },
     {
       id: 1,
       name: "Favorit",
@@ -50,17 +58,21 @@ export default function Menu() {
     },
     {
       id: 5,
-      name: "Hapus Akun",
-      isActive: auth.userData,
-      onClick: () => {},
-    },
-    {
-      id: 6,
       name: "Keluar",
       isActive: auth.userData,
-      onClick: () => auth.signOut(),
+      onClick: () => handleLogout(),
     },
   ];
+
+  function handleLogout() {
+    Alert.alert("Logout", "Anda yakin ingin keluar dari akun ini?", [
+      {
+        text: "Batal",
+        onPress: () => null,
+      },
+      { text: "OK", onPress: () => auth.signOut() },
+    ]);
+  }
 
   function handleClickLogin() {
     navigation.navigate("Login");
@@ -84,10 +96,18 @@ export default function Menu() {
                 alignItems: "center",
               }}
             >
-              <Avatar.Icon icon="account" size={38} />
+              {auth.userData.avatarUrl ? (
+                <Avatar.Image
+                  source={{ uri: auth.userData.avatarUrl }}
+                  size={38}
+                />
+              ) : (
+                <Avatar.Icon icon="account" size={38} />
+              )}
               <View>
                 <Text variant="titleMedium">{auth.userData.name}</Text>
                 <Text>{auth.userData.email}</Text>
+                <Text>{auth.userData.phone}</Text>
               </View>
             </View>
           </Surface>

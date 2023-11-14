@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { StyleSheet, View } from "react-native";
+import { Alert, StyleSheet, View } from "react-native";
 import { Button, TextInput, useTheme } from "react-native-paper";
 import { Controller, useForm } from "react-hook-form";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
@@ -30,7 +30,12 @@ export default function LoginScreen() {
       showLoader();
 
       await auth.signIn({ email, password }).then((res) => {
-        if (res?.status != 200) throw new Error("Gagal melakukan login");
+        if (res?.code == "need-verify") {
+          return handleVerify(email, res?.message);
+        } else if (res?.status != 200) {
+          throw new Error(res?.message || "Gagal melakukan login");
+        }
+
         navigation.goBack();
       });
     } catch (error) {
@@ -40,9 +45,40 @@ export default function LoginScreen() {
     }
   }
 
+  function handleVerify(email, message) {
+    Alert.alert("Verifikasi Akun", message, [
+      {
+        text: "Batal",
+        onPress: () => null,
+      },
+      { text: "OK", onPress: () => handleRequestVerify(email) },
+    ]);
+  }
+
+  async function handleRequestVerify(email) {
+    try {
+      showLoader();
+
+      await api.post("auth/verify", { email }).then((resp) => {
+        if (resp.status != 200)
+          throw new Error(resp.message || "Terjadi Kesalahan");
+
+        Toast.show(resp.message);
+      });
+    } catch (err) {
+      Toast.show(err.message || "Terjadi kesalahan");
+    } finally {
+      dismissLoader();
+    }
+  }
+
   async function handleGoogleSign() {
     try {
-      await GoogleSignin.hasPlayServices();
+      const isHasService = await GoogleSignin.hasPlayServices();
+      if (!isHasService) {
+        throw new Error("Google play service tidak ditemukan");
+      }
+
       const userInfo = await GoogleSignin.signIn();
 
       showLoader();
