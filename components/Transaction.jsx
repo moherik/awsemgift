@@ -145,7 +145,6 @@ export default function Transaction() {
         <Appbar.Action icon="bell-outline" onPress={() => {}} />
       </Appbar.Header>
       <FlatList
-        style={{ backgroundColor: theme.colors.background }}
         refreshing={loading}
         onRefresh={() => fetchData()}
         keyExtractor={(item) => item.id}
@@ -205,7 +204,13 @@ export default function Transaction() {
               }}
               onPress={() => handleOnClick(item)}
             >
-              <View style={{ display: "flex", flex: 1 }}>
+              <View
+                style={{
+                  display: "flex",
+                  flex: 1,
+                  backgroundColor: theme.colors.inversePrimary,
+                }}
+              >
                 <View
                   style={{
                     ...styles.itemLogo,
@@ -249,6 +254,8 @@ export default function Transaction() {
         index={0}
         snapPoints={snapPoints}
         onDismiss={handleOnDismissModal}
+        handleStyle={{ backgroundColor: theme.colors.background }}
+        handleIndicatorStyle={{ backgroundColor: theme.colors.inverseSurface }}
         backdropComponent={({ animatedIndex, style }) => (
           <CustomBackdrop
             animatedIndex={animatedIndex}
@@ -259,7 +266,9 @@ export default function Transaction() {
           />
         )}
       >
-        <BottomSheetScrollView>
+        <BottomSheetScrollView
+          style={{ backgroundColor: theme.colors.background }}
+        >
           {selectedItem && (
             <ProductDetail
               item={selectedItem}

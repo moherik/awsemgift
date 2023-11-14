@@ -1,18 +1,20 @@
 {
   "expo": {
-    "name": "awsem",
-    "slug": "awsem",
+    "name": "Awsemgift",
+    "slug": "awsemgift",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
+    "userInterfaceStyle": "automatic",
     "scheme": "awsemgift",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.emas.awsemgift",
@@ -43,11 +45,13 @@
           "contactsPermission": "Allow $(PRODUCT_NAME) to access your contacts."
         }
       ],
-      ["@react-native-google-signin/google-signin"]
+      [
+        "@react-native-google-signin/google-signin"
+      ]
     ],
     "extra": {
       "eas": {
-        "projectId": "014afeb1-5062-43cb-945c-b465ffe01c70"
+        "projectId": "374eda08-5be9-4c21-8486-7cec0b8d7b19"
       }
     }
   }

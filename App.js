@@ -16,6 +16,7 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { RootSiblingParent } from "react-native-root-siblings";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
+import { StatusBar } from "expo-status-bar";
 
 import theme from "./theme/custom";
 
@@ -61,7 +62,7 @@ export default function App() {
         <PaperProvider theme={combinedTheme}>
           <BottomSheetModalProvider>
             <CustomProvider>
-              <NavigationContainer>
+              <NavigationContainer theme={combinedTheme}>
                 <Stack.Navigator>
                   <Stack.Screen
                     name="Home"
@@ -121,6 +122,7 @@ export default function App() {
           </BottomSheetModalProvider>
         </PaperProvider>
       </RootSiblingParent>
+      <StatusBar style="auto" />
     </GestureHandlerRootView>
   );
 }

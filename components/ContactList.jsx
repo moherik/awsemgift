@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { BackHandler, FlatList, View } from "react-native";
-import { List, TextInput } from "react-native-paper";
+import { List, TextInput, useTheme } from "react-native-paper";
 import * as Contacts from "expo-contacts";
 
 let tempData = [];
@@ -12,6 +12,8 @@ export default function ContactList({
 }) {
   const [contacts, setContacts] = useState([]);
   const [searchText, setSearchText] = useState();
+
+  const theme = useTheme();
 
   async function getListContact() {
     const { status } = await Contacts.requestPermissionsAsync();
@@ -61,6 +63,7 @@ export default function ContactList({
 
   return (
     <FlatList
+      style={{ backgroundColor: theme.colors.background }}
       ListHeaderComponent={
         <View style={{ flex: 1 }}>
           <TextInput

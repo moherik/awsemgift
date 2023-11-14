@@ -198,7 +198,6 @@ export default function GiftDetailScreen({ route, navigation }) {
           </View>
         )}
       />
-      <View style={styles.divider} />
       <List.Item
         style={{ backgroundColor: theme.colors.background }}
         title={
@@ -225,7 +224,6 @@ export default function GiftDetailScreen({ route, navigation }) {
           />
         </>
       )}
-      <View style={styles.divider} />
       <List.Item
         style={{ backgroundColor: theme.colors.background }}
         title={currency(productData.price + productData.admin)}

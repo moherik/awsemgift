@@ -1,5 +1,11 @@
 import { createContext, useContext, useState } from "react";
-import { ActivityIndicator, Modal, Portal, Text } from "react-native-paper";
+import {
+  ActivityIndicator,
+  Modal,
+  Portal,
+  Text,
+  useTheme,
+} from "react-native-paper";
 
 const initialState = {
   showLoader: () => {},
@@ -9,6 +15,8 @@ export const LoaderContext = createContext(initialState);
 
 export default function LoaderProvider({ children }) {
   const [visible, setVisible] = useState(false);
+
+  const theme = useTheme();
 
   function showLoader() {
     setVisible(true);
@@ -32,13 +40,17 @@ export default function LoaderProvider({ children }) {
             justifyContent: "center",
           }}
           contentContainerStyle={{
-            backgroundColor: "white",
+            backgroundColor: theme.colors.background,
             marginHorizontal: 20,
             borderRadius: 10,
             padding: 15,
           }}
         >
-          <ActivityIndicator animating={true} size={32} />
+          <ActivityIndicator
+            color={theme.colors.primary}
+            animating={true}
+            size={32}
+          />
         </Modal>
       </Portal>
 

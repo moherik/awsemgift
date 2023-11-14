@@ -43,7 +43,6 @@ export default function ProductDetail({
   if (url) {
     const { hostname, path, queryParams } = Linking.parse(url);
     if (hostname == "payment" && path == "result") {
-      contact.close();
       dismissModal();
       navigation.navigate("PaymentResult", { ...queryParams });
     }
@@ -161,7 +160,7 @@ export default function ProductDetail({
             </Text>
           </View>
           <IconButton
-            iconColor={isFavorite ? theme.colors.error : theme.colors.shadow}
+            iconColor={isFavorite ? theme.colors.error : null}
             icon={isFavorite ? "heart" : "heart-outline"}
             onPress={handleFavorite}
           />

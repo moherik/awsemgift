@@ -1,5 +1,7 @@
 import { createContext, useMemo, useRef, useState } from "react";
 import { BottomSheetModal, BottomSheetScrollView } from "@gorhom/bottom-sheet";
+import { useTheme } from "@react-navigation/native";
+
 import ContactList from "./ContactList";
 
 export const ContactListContext = createContext({});
@@ -7,6 +9,7 @@ export const ContactListContext = createContext({});
 export default function ContactListProvider({ children }) {
   const [selectedItem, setSelectedItem] = useState();
 
+  const theme = useTheme();
   const bottomSheetModalRef = useRef(null);
   const snapPoints = useMemo(() => ["100%"], []);
 

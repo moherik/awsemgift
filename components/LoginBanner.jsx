@@ -1,5 +1,5 @@
 import { View } from "react-native";
-import { Button, Text } from "react-native-paper";
+import { Button, Text, useTheme } from "react-native-paper";
 import Constants from "expo-constants";
 
 export default function LoginBanner({
@@ -7,6 +7,8 @@ export default function LoginBanner({
   message = "Login untuk mengakses semua fitur",
   onClick,
 }) {
+  const theme = useTheme();
+
   return (
     <View
       style={{
@@ -15,6 +17,7 @@ export default function LoginBanner({
         justifyContent: "center",
         paddingVertical: 40,
         marginTop: Constants.statusBarHeight,
+        backgroundColor: theme.colors.background,
       }}
     >
       <Text variant="titleLarge">{title}</Text>

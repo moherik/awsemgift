@@ -11,7 +11,7 @@ import LoginBanner from "./LoginBanner";
 
 export default function MyGift() {
   const [gifts, setGifts] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   const theme = useTheme();
   const navigation = useNavigation();
@@ -33,6 +33,8 @@ export default function MyGift() {
   };
 
   async function getHistoryGift() {
+    setLoading(true);
+
     await api
       .get("gifts")
       .then((resp) => {
@@ -62,76 +64,63 @@ export default function MyGift() {
       >
         <Appbar.Content title="Hadiah Saya" />
       </Appbar.Header>
-      {auth.userData ? (
-        <FlatList
-          style={{ backgroundColor: theme.colors.background }}
-          refreshing={loading}
-          onRefresh={getHistoryGift}
-          data={gifts}
-          renderItem={({ item }) => (
-            <List.Item
-              title={item.orderDetail.productData.name}
-              description={() => (
-                <View
+      <FlatList
+        style={{ backgroundColor: theme.colors.background }}
+        refreshing={loading}
+        onRefresh={getHistoryGift}
+        data={gifts}
+        ListHeaderComponent={
+          !auth.userData ? <LoginBanner onClick={handleClickLogin} /> : null
+        }
+        renderItem={({ item }) => (
+          <List.Item
+            title={item.orderDetail.productData.name}
+            description={() => (
+              <View
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                }}
+              >
+                <Text>{item.billInfo2}</Text>
+                <Text variant="bodySmall">
+                  {dateFormat(item.createdAt, "dd MMM yyyy hh:ii")}
+                </Text>
+              </View>
+            )}
+            left={(props) => (
+              <Image
+                style={{
+                  ...props.style,
+                  borderRadius: 10,
+                  width: 40,
+                  height: 40,
+                }}
+                source={{ uri: item.orderDetail?.productData?.group?.logo }}
+              />
+            )}
+            right={(_props) => (
+              <View
+                style={{
+                  display: "flex",
+                  alignItems: "flex-end",
+                  justifyContent: "center",
+                }}
+              >
+                <Text
                   style={{
-                    display: "flex",
-                    flexDirection: "column",
+                    marginBottom: 2,
+                    color: mapStatus[item.status].color,
                   }}
                 >
-                  <Text>{item.billInfo2}</Text>
-                  <Text variant="bodySmall">
-                    {dateFormat(item.createdAt, "dd MMM yyyy hh:ii")}
-                  </Text>
-                </View>
-              )}
-              left={(props) => (
-                <Image
-                  style={{
-                    ...props.style,
-                    borderRadius: 10,
-                    width: 40,
-                    height: 40,
-                  }}
-                  source={{ uri: item.orderDetail?.productData?.group?.logo }}
-                />
-              )}
-              right={(_props) => (
-                <View
-                  style={{
-                    display: "flex",
-                    alignItems: "flex-end",
-                    justifyContent: "center",
-                  }}
-                >
-                  <Text
-                    style={{
-                      marginBottom: 2,
-                      color: mapStatus[item.status].color,
-                    }}
-                  >
-                    {mapStatus[item.status]?.label?.toUpperCase()}
-                  </Text>
-                </View>
-              )}
-              onPress={() => navigation.navigate("GiftDetail", { item: item })}
-            />
-          )}
-          ListEmptyComponent={
-            <View
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                marginVertical: 50,
-              }}
-            >
-              <Text>Tidak ada data</Text>
-            </View>
-          }
-        />
-      ) : (
-        <LoginBanner onClick={handleClickLogin} />
-      )}
+                  {mapStatus[item.status]?.label?.toUpperCase()}
+                </Text>
+              </View>
+            )}
+            onPress={() => navigation.navigate("GiftDetail", { item: item })}
+          />
+        )}
+      />
     </>
   );
 }

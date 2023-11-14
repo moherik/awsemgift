@@ -68,7 +68,6 @@ export default function Menu() {
 
   return (
     <FlatList
-      style={{ backgroundColor: theme.colors.background }}
       ListHeaderComponent={
         auth.userData ? (
           <Surface

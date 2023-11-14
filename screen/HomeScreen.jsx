@@ -11,11 +11,7 @@ export default function MainScreen() {
   const theme = useTheme();
 
   return (
-    <Tab.Navigator
-      screenOptions={{
-        tabBarStyle: { backgroundColor: theme.colors.primaryContainer },
-      }}
-    >
+    <Tab.Navigator theme={theme}>
       <Tab.Screen
         name="Transaction"
         options={{ title: "Kirim", tabBarIcon: "gift-outline" }}
