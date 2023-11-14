@@ -11,9 +11,14 @@ import {
 } from "react-native-paper";
 import Toast from "react-native-root-toast";
 import * as Clipboard from "expo-clipboard";
+import * as WebBrowser from "expo-web-browser";
+import * as Linking from "expo-linking";
 
 import { currency, dateFormat } from "../lib/formatter";
 import api from "../lib/api";
+import PaymentList from "../components/PaymentList";
+import useAuth from "../hooks/useAuth";
+import useLoader from "../hooks/useLoader";
 
 export default function GiftDetailScreen({ route, navigation }) {
   const item = route.params?.item;
@@ -22,8 +27,20 @@ export default function GiftDetailScreen({ route, navigation }) {
 
   const [orderData, setOrderData] = useState();
   const [loading, setLoading] = useState(true);
+  const [selectedPayment, setSelectedPayment] = useState();
 
   const theme = useTheme();
+  const auth = useAuth();
+  const { showLoader, dismissLoader } = useLoader();
+
+  const url = Linking.useURL();
+  if (url) {
+    const { hostname, path, queryParams } = Linking.parse(url);
+    if (hostname == "payment" && path == "result") {
+      checkStatus();
+      navigation.navigate("PaymentResult", { ...queryParams });
+    }
+  }
 
   const mapStatus = {
     "-1": {
@@ -40,28 +57,67 @@ export default function GiftDetailScreen({ route, navigation }) {
     },
   };
 
-  useEffect(() => {
-    async function checkStatus(orderId) {
-      await api
-        .post("/gifts/status", {
-          orderId,
-        })
-        .then((resp) => {
-          setOrderData(resp.data);
-        })
-        .catch((err) => {
-          Toast.show(err?.message || "Terjadi kesalahan");
-          setTimeout(() => {
-            navigation.goBack();
-          }, 3000);
-        })
-        .finally(() => {
-          setLoading(false);
-        });
-    }
+  async function checkStatus(orderId) {
+    setLoading(true);
 
+    await api
+      .post("/gifts/status", {
+        orderId,
+      })
+      .then((resp) => {
+        setOrderData(resp.data);
+      })
+      .catch((err) => {
+        Toast.show(err?.message || "Terjadi kesalahan");
+        setTimeout(() => {
+          navigation.goBack();
+        }, 3000);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }
+
+  useEffect(() => {
     checkStatus(item.id);
   }, []);
+
+  async function handlePay() {
+    try {
+      showLoader();
+
+      if (!selectedPayment) {
+        throw new Error("Pilih tipe pembayaran!");
+      }
+
+      await api
+        .post("gifts/order", {
+          productCode: productData.code,
+          phone: item.billInfo1,
+          name: item.billInfo2,
+          note: orderDetail.note,
+          type: selectedPayment,
+        })
+        .then(async (response) => {
+          if (response.status != 200) {
+            throw new Error(response.message || "Gagal menambahkan hadiah");
+          }
+
+          const { url, orderId } = response.data;
+          if (url) {
+            await WebBrowser.openBrowserAsync(url);
+          } else {
+            setTimeout(() => {
+              navigation.navigate("PaymentResult", { orderId });
+            }, 300);
+          }
+        });
+    } catch (error) {
+      Toast.show(error?.message || "Terjadi kesalahan");
+    } finally {
+      dismissLoader();
+    }
+  }
 
   async function handleSharing() {
     try {
@@ -79,6 +135,10 @@ export default function GiftDetailScreen({ route, navigation }) {
       .catch((err) => {
         Toast.show("Error copying to clipboard");
       });
+  }
+
+  function handleSelectPayment(paymentId) {
+    setSelectedPayment(paymentId);
   }
 
   if (loading) {
@@ -173,7 +233,23 @@ export default function GiftDetailScreen({ route, navigation }) {
         descriptionStyle={{ fontSize: 13 }}
         left={(props) => <List.Icon {...props} icon="cash-multiple" />}
       />
-      {orderData.status == 0 || orderData.status == 1 ? (
+      {orderData.status == -1 ? (
+        <View style={{ marginTop: 15, width: "100%" }}>
+          <PaymentList
+            onSelect={handleSelectPayment}
+            price={productData.price + productData.admin}
+            auth={auth}
+          />
+          <Button
+            style={{ marginHorizontal: 15, marginVertical: 10 }}
+            mode="contained"
+            icon="cash"
+            onPress={handlePay}
+          >
+            Bayar Sekarang
+          </Button>
+        </View>
+      ) : orderData.status == 0 || orderData.status == 1 ? (
         <View style={{ marginTop: 15 }}>
           <Button mode="contained" icon="link" onPress={handleSharing}>
             Bagikan Link

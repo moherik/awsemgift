@@ -3,4 +3,4 @@ export const FIELD_TYPE = {
   SELECT_OPTION: "selectOption",
 };
 
-export const BASE_URL = "http://10.0.76.89:3000";
+export const BASE_URL = "http://10.0.2.2:3000";

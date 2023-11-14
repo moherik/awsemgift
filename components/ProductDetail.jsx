@@ -1,12 +1,5 @@
 import { useEffect, useState } from "react";
-import {
-  Alert,
-  BackHandler,
-  FlatList,
-  Image,
-  StyleSheet,
-  View,
-} from "react-native";
+import { BackHandler, FlatList, Image, StyleSheet, View } from "react-native";
 import {
   Button,
   Divider,
@@ -26,8 +19,8 @@ import * as Linking from "expo-linking";
 import LoginBanner from "./LoginBanner";
 
 import { currency } from "../lib/formatter";
-import { BASE_URL } from "../constants";
 import api from "../lib/api";
+import PaymentList from "./PaymentList";
 
 const numColumns = 2;
 
@@ -45,8 +38,6 @@ export default function ProductDetail({
   const [selectedProduct, setselectedProduct] = useState();
   const [isFavorite, setIsFavorite] = useState(item.isFavorite || false);
   const [selectedPayment, setSelectedPayment] = useState();
-  const [paymentList, setPaymentList] = useState([]);
-  const [loading, setLoading] = useState(true);
 
   const url = Linking.useURL();
   if (url) {
@@ -70,18 +61,6 @@ export default function ProductDetail({
     setValue("phone", contact.selectedItem?.phoneNumbers[0].number);
     setValue("name", contact.selectedItem?.name);
   }, [contact.selectedItem]);
-
-  useEffect(() => {
-    async function getPaymentList() {
-      await api.get("general/payment-list").then((res) => {
-        setPaymentList(res.data);
-      });
-    }
-
-    if (auth.userData) {
-      getPaymentList();
-    }
-  }, [auth.userData]);
 
   useEffect(() => {
     async function backAction() {
@@ -135,6 +114,10 @@ export default function ProductDetail({
     } finally {
       dismissLoader();
     }
+  }
+
+  function handleSelectPayment(paymentId) {
+    setSelectedPayment(paymentId);
   }
 
   function handleFavorite() {
@@ -318,47 +301,11 @@ export default function ProductDetail({
               <Text style={styles.headerLabel} variant="labelMedium">
                 Pembayaran
               </Text>
-              {paymentList.map((payment, index) => (
-                <List.Item
-                  style={{ paddingVertical: 2 }}
-                  key={payment.id || index}
-                  title={payment.label}
-                  disabled={
-                    payment.balance <= 0 ||
-                    payment.balance < selectedProduct?.price
-                  }
-                  description={
-                    payment.id == "BALANCE"
-                      ? payment.balance > selectedProduct.price
-                        ? currency(payment.balance)
-                        : currency(payment.balance) +
-                          " - saldo Anda tidak mencukupi"
-                      : payment.info
-                  }
-                  left={(props) =>
-                    payment.icon ? (
-                      <List.Icon {...props} icon={payment.icon} />
-                    ) : (
-                      <Image
-                        {...props}
-                        width={22}
-                        height={22}
-                        source={{ uri: `${BASE_URL}/${payment.logo}` }}
-                      />
-                    )
-                  }
-                  right={(props) =>
-                    payment.id == selectedPayment && (
-                      <List.Icon
-                        {...props}
-                        icon="check-circle"
-                        color={theme.colors.primary}
-                      />
-                    )
-                  }
-                  onPress={() => setSelectedPayment(payment.id)}
-                />
-              ))}
+              <PaymentList
+                price={selectedProduct.price + selectedProduct.admin}
+                onSelect={handleSelectPayment}
+                auth={auth}
+              />
               <View style={{ marginVertical: 20, gap: 10 }}>
                 <View style={styles.row}>
                   <Text>Produk</Text>

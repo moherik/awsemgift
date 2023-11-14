@@ -41,8 +41,6 @@ export default function LoginScreen() {
   }
 
   async function handleGoogleSign() {
-    GoogleSignin.configure();
-
     try {
       await GoogleSignin.hasPlayServices();
       const userInfo = await GoogleSignin.signIn();

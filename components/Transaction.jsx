@@ -142,6 +142,7 @@ export default function Transaction() {
         <Appbar.Action icon="bell-outline" onPress={() => {}} />
       </Appbar.Header>
       <FlatList
+        style={{ backgroundColor: theme.colors.background }}
         refreshing={loading}
         onRefresh={() => fetchData()}
         keyExtractor={(item) => item.id}

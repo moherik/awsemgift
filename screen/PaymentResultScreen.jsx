@@ -15,29 +15,29 @@ export default function PaymentResultScreen({ route, navigation }) {
 
   const { showLoader, dismissLoader } = useLoader();
 
+  async function checkStatus(orderId) {
+    showLoader();
+
+    await api
+      .post("/gifts/status", {
+        orderId,
+      })
+      .then((resp) => {
+        setOrderData(resp.data);
+      })
+      .catch((err) => {
+        Toast.show(err?.message || "Terjadi kesalahan");
+        setTimeout(() => {
+          navigation.goBack();
+        }, 3000);
+      })
+      .finally(() => {
+        setLoading(false);
+        dismissLoader();
+      });
+  }
+
   useEffect(() => {
-    async function checkStatus(orderId) {
-      showLoader();
-
-      await api
-        .post("/gifts/status", {
-          orderId,
-        })
-        .then((resp) => {
-          setOrderData(resp.data);
-        })
-        .catch((err) => {
-          Toast.show(err?.message || "Terjadi kesalahan");
-          setTimeout(() => {
-            navigation.goBack();
-          }, 3000);
-        })
-        .finally(() => {
-          setLoading(false);
-          dismissLoader();
-        });
-    }
-
     setTimeout(() => {
       checkStatus(orderId);
     }, 3000);

@@ -32,8 +32,6 @@ export default function RegisterScreen() {
   }
 
   async function googleSign() {
-    GoogleSignin.configure();
-
     try {
       await GoogleSignin.hasPlayServices();
       const userInfo = await GoogleSignin.signIn();
