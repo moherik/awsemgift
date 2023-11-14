@@ -6,12 +6,11 @@ import ContactList from "./ContactList";
 
 export const ContactListContext = createContext({});
 
-export default function ContactListProvider({ children }) {
+export default function ContactListProvider({ children, theme }) {
   const [selectedItem, setSelectedItem] = useState();
 
-  const theme = useTheme();
   const bottomSheetModalRef = useRef(null);
-  const snapPoints = useMemo(() => ["100%"], []);
+  const snapPoints = useMemo(() => ["96%"], []);
 
   function open() {
     bottomSheetModalRef.current?.present();
@@ -35,6 +34,8 @@ export default function ContactListProvider({ children }) {
         ref={bottomSheetModalRef}
         index={0}
         snapPoints={snapPoints}
+        handleStyle={{ backgroundColor: theme.colors.background }}
+        handleIndicatorStyle={{ backgroundColor: theme.colors.inverseSurface }}
       >
         <BottomSheetScrollView keyboardShouldPersistTaps="always">
           <ContactList

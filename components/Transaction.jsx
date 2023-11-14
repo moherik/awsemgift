@@ -53,7 +53,7 @@ export default function Transaction() {
   const bottomSheetModalRef = useRef(null);
 
   // variables
-  const snapPoints = useMemo(() => ["80%", "100%"], []);
+  const snapPoints = useMemo(() => ["80%", "96%"], []);
 
   async function fetchData() {
     setLoading(true);
