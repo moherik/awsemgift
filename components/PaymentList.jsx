@@ -32,7 +32,6 @@ export default function PaymentList({ onSelect, auth, price }) {
     <View style={{ width: "100%" }}>
       {paymentList.map((payment, index) => (
         <List.Item
-          style={{ paddingVertical: 2 }}
           key={payment.id || index}
           title={payment.label}
           disabled={payment.balance <= 0 || payment.balance < price}

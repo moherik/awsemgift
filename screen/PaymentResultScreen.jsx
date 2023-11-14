@@ -11,7 +11,8 @@ export default function PaymentResultScreen({ route, navigation }) {
   const [orderData, setOrderData] = useState();
   const [loading, setLoading] = useState(true);
 
-  const { orderId } = route.params;
+  const backRoutes = route.params.backRoutes;
+  const orderId = route.params.orderId;
 
   const { showLoader, dismissLoader } = useLoader();
 
@@ -28,7 +29,11 @@ export default function PaymentResultScreen({ route, navigation }) {
       .catch((err) => {
         Toast.show(err?.message || "Terjadi kesalahan");
         setTimeout(() => {
-          navigation.goBack();
+          if (backRoutes) {
+            navigation.navigate(backRoutes);
+          } else {
+            navigation.goBack();
+          }
         }, 3000);
       })
       .finally(() => {

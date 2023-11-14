@@ -39,8 +39,10 @@ export default function GiftDetailScreen({ route, navigation }) {
   if (url) {
     const { hostname, path, queryParams } = Linking.parse(url);
     if (hostname == "payment" && path == "result") {
-      checkStatus();
-      navigation.navigate("PaymentResult", { ...queryParams });
+      navigation.navigate("PaymentResult", {
+        ...queryParams,
+        backRoutes: "Home",
+      });
     }
   }
 

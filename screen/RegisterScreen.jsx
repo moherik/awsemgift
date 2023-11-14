@@ -94,6 +94,7 @@ export default function RegisterScreen() {
               value={value}
               onBlur={onBlur}
               onChangeText={onChange}
+              left={<TextInput.Icon icon="account" />}
             />
           )}
         />
@@ -109,6 +110,7 @@ export default function RegisterScreen() {
               value={value}
               onBlur={onBlur}
               onChangeText={onChange}
+              left={<TextInput.Icon icon="email" />}
             />
           )}
         />
@@ -124,6 +126,7 @@ export default function RegisterScreen() {
               value={value}
               onBlur={onBlur}
               onChangeText={onChange}
+              left={<TextInput.Icon icon="phone" />}
             />
           )}
         />
@@ -140,6 +143,7 @@ export default function RegisterScreen() {
               value={value}
               onBlur={onBlur}
               onChangeText={onChange}
+              left={<TextInput.Icon icon="key" />}
               right={
                 <TextInput.Icon
                   icon={!showPassword ? "eye-outline" : "eye-off-outline"}

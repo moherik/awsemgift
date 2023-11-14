@@ -26,7 +26,7 @@ export default function Menu() {
   const data = [
     {
       id: 0,
-      name: currency(auth.userData?.balance),
+      name: currency(auth.userData?.balance || "0"),
       desc: "Saldo Anda",
       icon: "cash-multiple",
       isActive: auth.userData,

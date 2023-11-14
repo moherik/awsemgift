@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Alert, StyleSheet, View } from "react-native";
-import { Button, TextInput, useTheme } from "react-native-paper";
+import { Button, Text, TextInput, useTheme } from "react-native-paper";
 import { Controller, useForm } from "react-hook-form";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import { useNavigation } from "@react-navigation/native";
@@ -157,6 +157,7 @@ export default function LoginScreen() {
                 value={value}
                 onBlur={onBlur}
                 onChangeText={onChange}
+                left={<TextInput.Icon icon="email" />}
               />
             )}
           />
@@ -173,6 +174,7 @@ export default function LoginScreen() {
                 value={value}
                 onBlur={onBlur}
                 onChangeText={onChange}
+                left={<TextInput.Icon icon="key" />}
                 right={
                   <TextInput.Icon
                     icon={!showPassword ? "eye-outline" : "eye-off-outline"}
@@ -187,6 +189,7 @@ export default function LoginScreen() {
           <Button mode="contained" onPress={handleSubmit(handleSign)}>
             Masuk
           </Button>
+          <Text style={{ textAlign: "center" }}>atau</Text>
           <Button
             mode="contained-tonal"
             onPress={handleGoogleSign}
