@@ -67,6 +67,9 @@ export default function Transaction() {
         setCategories(response.data?.categories || []);
         setSelectedCategory(null);
       })
+      .catch((err) => {
+        Toast.show(err.message || "Terjadi kesalahan");
+      })
       .finally(() => setLoading(false));
   }
 

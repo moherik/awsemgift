@@ -7,6 +7,7 @@ import {
   Surface,
   Text,
   TouchableRipple,
+  useTheme,
 } from "react-native-paper";
 import Constants from "expo-constants";
 import * as WebBrowser from "expo-web-browser";
@@ -18,6 +19,7 @@ import LoginBanner from "./LoginBanner";
 export default function Menu() {
   const navigation = useNavigation();
 
+  const theme = useTheme();
   const auth = useAuth();
 
   const data = [
@@ -66,6 +68,7 @@ export default function Menu() {
 
   return (
     <FlatList
+      style={{ backgroundColor: theme.colors.background }}
       ListHeaderComponent={
         auth.userData ? (
           <Surface

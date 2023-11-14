@@ -64,6 +64,7 @@ export default function MyGift() {
       </Appbar.Header>
       {auth.userData ? (
         <FlatList
+          style={{ backgroundColor: theme.colors.background }}
           refreshing={loading}
           onRefresh={getHistoryGift}
           data={gifts}

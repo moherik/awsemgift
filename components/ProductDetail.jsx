@@ -43,6 +43,7 @@ export default function ProductDetail({
   if (url) {
     const { hostname, path, queryParams } = Linking.parse(url);
     if (hostname == "payment" && path == "result") {
+      contact.close();
       dismissModal();
       navigation.navigate("PaymentResult", { ...queryParams });
     }
