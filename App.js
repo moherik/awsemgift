@@ -26,7 +26,7 @@ import TopupScreen from "./screen/TopupScreen";
 import LoginScreen from "./screen/LoginScreen";
 import RegisterScreen from "./screen/RegisterScreen";
 import InboxScreen from "./screen/InboxScreen";
-import GiftDetailScreen from "./screen/GiftDetailScreen";
+import HistoryDetailScreen from "./screen/HistoryDetailScreen";
 import FavoriteScreen from "./screen/FavoriteScreen";
 import PaymentWebviewScreen from "./screen/PaymentWebviewScreen";
 
@@ -96,7 +96,7 @@ export default function App() {
                   />
                   <Stack.Screen
                     name="GiftDetail"
-                    component={GiftDetailScreen}
+                    component={HistoryDetailScreen}
                     options={({ route }) => ({
                       title:
                         route.params?.item?.orderDetail?.productData?.name ||

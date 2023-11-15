@@ -21,7 +21,7 @@ import useAuth from "../hooks/useAuth";
 import useLoader from "../hooks/useLoader";
 import { giftStatus } from "../constants";
 
-export default function GiftDetailScreen({ route, navigation }) {
+export default function HistoryDetailScreen({ route, navigation }) {
   const item = route.params?.item;
   const orderDetail = item.orderDetail;
   const productData = orderDetail.productData;

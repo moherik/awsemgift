@@ -10,7 +10,7 @@ import { dateFormat } from "../lib/formatter";
 import LoginBanner from "./LoginBanner";
 import { giftStatus } from "../constants";
 
-export default function MyGift() {
+export default function History() {
   const [gifts, setGifts] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -50,7 +50,7 @@ export default function MyGift() {
           backgroundColor: theme.colors.primaryContainer,
         }}
       >
-        <Appbar.Content title="Hadiah Saya" />
+        <Appbar.Content title="Riwayat Transaksi" />
       </Appbar.Header>
       <FlatList
         style={{ backgroundColor: theme.colors.background }}

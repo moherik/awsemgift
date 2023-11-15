@@ -2,8 +2,8 @@ import { createMaterialBottomTabNavigator } from "@react-navigation/material-bot
 import { useTheme } from "react-native-paper";
 
 import Transaction from "../components/Transaction";
-import MyGift from "../components/MyGift";
 import Menu from "../components/Menu";
+import History from "../components/History";
 
 const Tab = createMaterialBottomTabNavigator();
 
@@ -18,9 +18,9 @@ export default function MainScreen() {
         component={Transaction}
       />
       <Tab.Screen
-        name="MyGift"
-        options={{ title: "Hadiah", tabBarIcon: "gift-open-outline" }}
-        component={MyGift}
+        name="History"
+        options={{ title: "Riwayat", tabBarIcon: "history" }}
+        component={History}
       />
       <Tab.Screen
         name="Menu"
