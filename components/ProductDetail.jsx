@@ -5,7 +5,6 @@ import {
   Divider,
   HelperText,
   IconButton,
-  List,
   Text,
   TextInput,
   TouchableRipple,
@@ -13,7 +12,6 @@ import {
 } from "react-native-paper";
 import { Controller, useForm } from "react-hook-form";
 import Toast from "react-native-root-toast";
-import * as WebBrowser from "expo-web-browser";
 import * as Linking from "expo-linking";
 
 import LoginBanner from "./LoginBanner";
@@ -101,7 +99,7 @@ export default function ProductDetail({
           const { url, orderId } = response.data;
           console.log(url, orderId);
           if (url) {
-            await WebBrowser.openBrowserAsync(url);
+            navigation.navigate("PaymentWebView", { url });
           } else {
             dismissModal();
             setTimeout(() => {

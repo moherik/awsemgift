@@ -26,10 +26,11 @@ import TopupScreen from "./screen/TopupScreen";
 import LoginScreen from "./screen/LoginScreen";
 import RegisterScreen from "./screen/RegisterScreen";
 import InboxScreen from "./screen/InboxScreen";
-
-import CustomProvider from "./components/CustomProvider";
 import GiftDetailScreen from "./screen/GiftDetailScreen";
 import FavoriteScreen from "./screen/FavoriteScreen";
+import PaymentWebviewScreen from "./screen/PaymentWebviewScreen";
+
+import CustomProvider from "./components/CustomProvider";
 
 const { LightTheme, DarkTheme } = adaptNavigationTheme({
   reactNavigationLight: NavigationDefaultTheme,
@@ -75,6 +76,13 @@ export default function App() {
                     options={{
                       title: "AwsemGift",
                       headerShown: false,
+                    }}
+                  />
+                  <Stack.Screen
+                    name="PaymentWebView"
+                    component={PaymentWebviewScreen}
+                    options={{
+                      title: "Pembayaran",
                     }}
                   />
                   <Stack.Screen

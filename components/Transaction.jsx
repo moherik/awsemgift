@@ -311,7 +311,7 @@ const styles = StyleSheet.create({
   itemWrapper: {
     flex: 1,
     margin: 5,
-    borderRadius: 10,
+    borderRadius: 5,
     borderWidth: 1,
     display: "flex",
     overflow: "hidden",

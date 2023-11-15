@@ -12,7 +12,6 @@ import {
 } from "react-native-paper";
 import Toast from "react-native-root-toast";
 import * as Clipboard from "expo-clipboard";
-import * as WebBrowser from "expo-web-browser";
 import * as Linking from "expo-linking";
 
 import { currency, dateFormat } from "../lib/formatter";
@@ -96,11 +95,9 @@ export default function GiftDetailScreen({ route, navigation }) {
 
           const { url, orderId } = response.data;
           if (url) {
-            await WebBrowser.openBrowserAsync(url);
+            navigation.navigate("PaymentWebView", { url });
           } else {
-            setTimeout(() => {
-              navigation.navigate("PaymentResult", { orderId });
-            }, 300);
+            navigation.navigate("PaymentResult", { orderId });
           }
         });
     } catch (error) {
