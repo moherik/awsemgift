@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { Alert, FlatList, View } from "react-native";
 import {
@@ -16,8 +17,11 @@ import useAuth from "../hooks/useAuth";
 import { currency } from "../lib/formatter";
 
 import LoginBanner from "./LoginBanner";
+import Toast from "react-native-root-toast";
 
 export default function Menu() {
+  const [loading, setLoading] = useState(false);
+
   const navigation = useNavigation();
 
   const theme = useTheme();
@@ -78,8 +82,18 @@ export default function Menu() {
     navigation.navigate("Login");
   }
 
+  async function handleRefresh() {
+    try {
+      await auth.refresh();
+    } catch (error) {
+      Toast.show("Terjadi kesalahan");
+    }
+  }
+
   return (
     <FlatList
+      refreshing={loading}
+      onRefresh={handleRefresh}
       ListHeaderComponent={
         auth.userData ? (
           <Surface

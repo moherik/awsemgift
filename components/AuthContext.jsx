@@ -16,10 +16,10 @@ export default function AuthProvider({ children }) {
   const [userData, setuserData] = useState({});
 
   useEffect(() => {
-    loadStorageData();
+    refresh();
   }, []);
 
-  async function loadStorageData() {
+  async function refresh() {
     const authToken = await getAccessToken();
     if (authToken) {
       await api.get("users/profile").then((response) => {
@@ -68,7 +68,7 @@ export default function AuthProvider({ children }) {
   }
 
   return (
-    <AuthContext.Provider value={{ userData, signIn, signOut }}>
+    <AuthContext.Provider value={{ userData, signIn, signOut, refresh }}>
       {children}
     </AuthContext.Provider>
   );

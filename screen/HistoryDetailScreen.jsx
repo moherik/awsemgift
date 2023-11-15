@@ -28,22 +28,8 @@ export default function HistoryDetailScreen({ route, navigation }) {
 
   const [orderData, setOrderData] = useState();
   const [loading, setLoading] = useState(true);
-  const [selectedPayment, setSelectedPayment] = useState();
 
   const theme = useTheme();
-  const auth = useAuth();
-  const { showLoader, dismissLoader } = useLoader();
-
-  const url = Linking.useURL();
-  if (url) {
-    const { hostname, path, queryParams } = Linking.parse(url);
-    if (hostname == "payment" && path == "result") {
-      navigation.navigate("PaymentResult", {
-        ...queryParams,
-        backRoutes: "Home",
-      });
-    }
-  }
 
   const mapStatus = giftStatus(theme);
 
@@ -73,38 +59,8 @@ export default function HistoryDetailScreen({ route, navigation }) {
   }, []);
 
   async function handlePay() {
-    try {
-      showLoader();
-
-      if (!selectedPayment) {
-        throw new Error("Pilih tipe pembayaran!");
-      }
-
-      await api
-        .post("gifts/order", {
-          productCode: productData.code,
-          phone: item.billInfo1,
-          name: item.billInfo2,
-          note: orderDetail.note,
-          type: selectedPayment,
-        })
-        .then(async (response) => {
-          if (response.status != 200) {
-            throw new Error(response.message || "Gagal menambahkan hadiah");
-          }
-
-          const { url, orderId } = response.data;
-          if (url) {
-            navigation.navigate("PaymentWebView", { url });
-          } else {
-            navigation.navigate("PaymentResult", { orderId });
-          }
-        });
-    } catch (error) {
-      Toast.show(error?.message || "Terjadi kesalahan");
-    } finally {
-      dismissLoader();
-    }
+    const url = orderData.paymentData.invoice_url;
+    navigation.navigate("PaymentWebView", { url });
   }
 
   async function handleSharing() {
@@ -123,10 +79,6 @@ export default function HistoryDetailScreen({ route, navigation }) {
       .catch((err) => {
         Toast.show("Terjadi kesalahan");
       });
-  }
-
-  function handleSelectPayment(paymentId) {
-    setSelectedPayment(paymentId);
   }
 
   if (loading) {
@@ -158,7 +110,6 @@ export default function HistoryDetailScreen({ route, navigation }) {
       </View>
       <Divider />
       <List.Item
-        style={{ backgroundColor: theme.colors.background }}
         title={productData.name}
         description={productData.code + " - " + productData.group.category.name}
         left={(props) => (
@@ -183,13 +134,11 @@ export default function HistoryDetailScreen({ route, navigation }) {
         )}
       />
       <List.Item
-        style={{ backgroundColor: theme.colors.background }}
         title={mapStatus[item.status]?.info}
         titleNumberOfLines={3}
         left={(props) => <List.Icon {...props} icon="help-circle-outline" />}
       />
       <List.Item
-        style={{ backgroundColor: theme.colors.background }}
         title={
           <View>
             <Text>{item.billInfo2}</Text>
@@ -204,7 +153,6 @@ export default function HistoryDetailScreen({ route, navigation }) {
         <>
           <View style={styles.divider} />
           <List.Item
-            style={{ backgroundColor: theme.colors.background }}
             title={orderDetail.note}
             description="Ucapan"
             descriptionStyle={{ fontSize: 13 }}
@@ -215,18 +163,21 @@ export default function HistoryDetailScreen({ route, navigation }) {
         </>
       )}
       <List.Item
-        style={{ backgroundColor: theme.colors.background }}
         title={currency(productData.price + productData.admin)}
         description="Total Harga"
         descriptionStyle={{ fontSize: 13 }}
         left={(props) => <List.Icon {...props} icon="cash-multiple" />}
       />
-      {orderData.status == -1 ? (
-        <View style={{ marginTop: 15, width: "100%" }}>
-          <PaymentList
-            onSelect={handleSelectPayment}
-            price={productData.price + productData.admin}
-            auth={auth}
+      {orderData?.status == -1 ? (
+        <View style={{ width: "100%" }}>
+          <List.Item
+            title={dateFormat(
+              orderData?.paymentData?.expiry_date,
+              "dd MMMM yyyy hh:mm:ss"
+            )}
+            description="Bayar Sebelum"
+            descriptionStyle={{ fontSize: 13 }}
+            left={(props) => <List.Icon {...props} icon="clock-outline" />}
           />
           <Button
             style={{ marginHorizontal: 15, marginVertical: 10 }}
@@ -237,7 +188,7 @@ export default function HistoryDetailScreen({ route, navigation }) {
             Bayar Sekarang
           </Button>
         </View>
-      ) : orderData.status == 0 || orderData.status == 1 ? (
+      ) : orderData?.status == 0 || orderData.status == 1 ? (
         <View style={{ marginTop: 15 }}>
           <Button mode="contained" icon="link" onPress={handleSharing}>
             Bagikan Link
@@ -246,7 +197,7 @@ export default function HistoryDetailScreen({ route, navigation }) {
       ) : null}
       <View style={{ ...styles.centered, marginTop: 15 }}>
         <Text variant="bodySmall">
-          Order Time: {dateFormat(item.createdAt, "hh:ii:ss dd MMMM yyyy")}
+          Order Time: {dateFormat(item.createdAt, "dd MMMM yyyy hh:mm:ss")}
         </Text>
       </View>
     </View>

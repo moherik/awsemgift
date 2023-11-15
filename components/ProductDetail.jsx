@@ -37,15 +37,6 @@ export default function ProductDetail({
   const [isFavorite, setIsFavorite] = useState(item.isFavorite || false);
   const [selectedPayment, setSelectedPayment] = useState();
 
-  const url = Linking.useURL();
-  if (url) {
-    const { hostname, path, queryParams } = Linking.parse(url);
-    if (hostname == "payment" && path == "result") {
-      dismissModal();
-      navigation.navigate("PaymentResult", { ...queryParams });
-    }
-  }
-
   const theme = useTheme();
   const { control, handleSubmit, setValue, formState } = useForm({
     defaultValues: {
@@ -99,7 +90,10 @@ export default function ProductDetail({
           const { url, orderId } = response.data;
           console.log(url, orderId);
           if (url) {
-            navigation.navigate("PaymentWebView", { url });
+            dismissModal();
+            setTimeout(() => {
+              navigation.navigate("PaymentWebView", { url });
+            }, 300);
           } else {
             dismissModal();
             setTimeout(() => {
