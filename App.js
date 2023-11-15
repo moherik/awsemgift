@@ -57,9 +57,14 @@ export default function App() {
         };
 
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <RootSiblingParent>
-        <PaperProvider theme={combinedTheme}>
+    <PaperProvider theme={combinedTheme}>
+      <GestureHandlerRootView
+        style={{
+          flex: 1,
+          backgroundColor: theme.colors[colorScheme].background,
+        }}
+      >
+        <RootSiblingParent>
           <BottomSheetModalProvider>
             <CustomProvider>
               <NavigationContainer theme={combinedTheme}>
@@ -120,10 +125,10 @@ export default function App() {
               </NavigationContainer>
             </CustomProvider>
           </BottomSheetModalProvider>
-        </PaperProvider>
-      </RootSiblingParent>
-      <StatusBar style="auto" />
-    </GestureHandlerRootView>
+        </RootSiblingParent>
+        <StatusBar style="auto" />
+      </GestureHandlerRootView>
+    </PaperProvider>
   );
 }
 

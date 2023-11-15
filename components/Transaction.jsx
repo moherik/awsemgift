@@ -30,8 +30,8 @@ import CustomBackdrop from "./CustomBackdrop";
 import ProductDetail from "./ProductDetail";
 
 let tempData = [];
-const numColumns = 2;
-const cardHeight = Dimensions.get("window").width / numColumns - 20;
+const numColumns = 3;
+const cardHeight = Dimensions.get("window").width / numColumns + 20;
 
 export default function Transaction() {
   const [loading, setLoading] = useState(true);
@@ -221,13 +221,17 @@ export default function Transaction() {
                   <Image
                     style={{ borderRadius: 12 }}
                     source={{ uri: item.logo }}
-                    width={cardHeight - 120}
-                    height={cardHeight - 120}
+                    width={cardHeight - 100}
+                    height={cardHeight - 100}
                   />
                 </View>
                 <View style={{ paddingHorizontal: 15, paddingVertical: 10 }}>
-                  <Text variant="titleMedium">{item.name}</Text>
-                  <Text>{item.price}</Text>
+                  <Text variant="titleSmall" numberOfLines={1}>
+                    {item.name}
+                  </Text>
+                  <Text variant="bodySmall" numberOfLines={1}>
+                    {item.price}
+                  </Text>
                 </View>
               </View>
             </TouchableRipple>
