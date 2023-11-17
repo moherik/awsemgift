@@ -1,10 +1,12 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { IconButton } from "react-native-paper";
 import { CommonActions } from "@react-navigation/native";
 import WebView from "react-native-webview";
 import * as Linking from "expo-linking";
 
 export default function PaymentWebviewScreen({ route, navigation }) {
+  const [loading, setLoading] = useState(true);
+
   const webviewUrl = route.params.url;
 
   const url = Linking.useURL();
@@ -29,15 +31,17 @@ export default function PaymentWebviewScreen({ route, navigation }) {
   const webViewRef = useRef();
 
   useEffect(() => {
-    navigation.setOptions({
-      headerRight: () => (
-        <IconButton
-          icon="refresh"
-          onPress={() => webViewRef.current?.reload()}
-        />
-      ),
-    });
-  }, [navigation]);
+    if (!loading) {
+      navigation.setOptions({
+        headerRight: () => (
+          <IconButton
+            icon="refresh"
+            onPress={() => webViewRef.current?.reload()}
+          />
+        ),
+      });
+    }
+  }, [navigation, loading]);
 
   function openExternalLink(req) {
     console.log(req.url);
@@ -53,6 +57,7 @@ export default function PaymentWebviewScreen({ route, navigation }) {
     <WebView
       ref={webViewRef}
       source={{ uri: webviewUrl }}
+      onLoadEnd={() => setLoading(false)}
       onShouldStartLoadWithRequest={openExternalLink}
     />
   );

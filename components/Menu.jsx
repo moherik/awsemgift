@@ -1,13 +1,12 @@
 import { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
-import { Alert, FlatList, View } from "react-native";
+import { Alert, FlatList, Pressable, View } from "react-native";
 import {
   Avatar,
   Divider,
   List,
   Surface,
   Text,
-  TouchableRipple,
   useTheme,
 } from "react-native-paper";
 import Constants from "expo-constants";
@@ -93,14 +92,11 @@ export default function Menu() {
   return (
     <FlatList
       refreshing={loading}
-      onRefresh={handleRefresh}
+      onRefresh={auth.userData ? handleRefresh : null}
       ListHeaderComponent={
         auth.userData ? (
-          <Surface
-            style={{ paddingTop: Constants.statusBarHeight }}
-            onPress={() => {}}
-          >
-            <View
+          <Surface style={{ paddingTop: Constants.statusBarHeight }}>
+            <Pressable
               style={{
                 display: "flex",
                 flexDirection: "row",
@@ -109,6 +105,9 @@ export default function Menu() {
                 gap: 15,
                 alignItems: "center",
               }}
+              onPress={() =>
+                navigation.navigate("Profile", { ...auth.userData })
+              }
             >
               {auth.userData.avatarUrl ? (
                 <Avatar.Image
@@ -121,9 +120,8 @@ export default function Menu() {
               <View>
                 <Text variant="titleMedium">{auth.userData.name}</Text>
                 <Text>{auth.userData.email}</Text>
-                <Text>{auth.userData.phone}</Text>
               </View>
-            </View>
+            </Pressable>
           </Surface>
         ) : (
           <LoginBanner onClick={handleClickLogin} />

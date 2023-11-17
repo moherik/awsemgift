@@ -32,9 +32,9 @@ export default function History() {
   }
 
   useEffect(() => {
-    if (auth.userData) {
-      setGifts([]);
+    setGifts([]);
 
+    if (auth.userData) {
       getHistoryGift();
     }
   }, [auth.userData]);
@@ -55,7 +55,7 @@ export default function History() {
       <FlatList
         style={{ backgroundColor: theme.colors.background }}
         refreshing={loading}
-        onRefresh={getHistoryGift}
+        onRefresh={auth.userData ? getHistoryGift : null}
         data={gifts}
         ListHeaderComponent={
           !auth.userData ? <LoginBanner onClick={handleClickLogin} /> : null

@@ -12,14 +12,11 @@ import {
 } from "react-native-paper";
 import Toast from "react-native-root-toast";
 import * as Clipboard from "expo-clipboard";
-import * as Linking from "expo-linking";
 
 import { currency, dateFormat } from "../lib/formatter";
 import api from "../lib/api";
-import PaymentList from "../components/PaymentList";
-import useAuth from "../hooks/useAuth";
-import useLoader from "../hooks/useLoader";
-import { giftStatus } from "../constants";
+
+import { ORDER_STATUS, giftStatus } from "../constants";
 
 export default function HistoryDetailScreen({ route, navigation }) {
   const item = route.params?.item;
@@ -168,7 +165,7 @@ export default function HistoryDetailScreen({ route, navigation }) {
         descriptionStyle={{ fontSize: 13 }}
         left={(props) => <List.Icon {...props} icon="cash-multiple" />}
       />
-      {orderData?.status == -1 ? (
+      {orderData?.status == ORDER_STATUS.PENDING ? (
         <View style={{ width: "100%" }}>
           <List.Item
             title={dateFormat(
@@ -188,7 +185,7 @@ export default function HistoryDetailScreen({ route, navigation }) {
             Bayar Sekarang
           </Button>
         </View>
-      ) : orderData?.status == 0 || orderData.status == 1 ? (
+      ) : orderData?.status == ORDER_STATUS.PLACED ? (
         <View style={{ marginTop: 15 }}>
           <Button mode="contained" icon="link" onPress={handleSharing}>
             Bagikan Link

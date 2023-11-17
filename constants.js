@@ -3,7 +3,15 @@ export const FIELD_TYPE = {
   SELECT_OPTION: "selectOption",
 };
 
-export const BASE_URL = "https://app.awsemgift.com";
+export const BASE_URL = "http://10.0.2.2:3000";
+
+export const ORDER_STATUS = {
+  PENDING: -1,
+  PLACED: 0,
+  PROCESS: 1,
+  ACCEPTED: 2,
+  FAILED: 3,
+};
 
 export function giftStatus(theme) {
   return {

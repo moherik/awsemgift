@@ -7,6 +7,8 @@ import Toast from "react-native-root-toast";
 import api from "../lib/api";
 import useLoader from "../hooks/useLoader";
 
+import { ORDER_STATUS } from "../constants";
+
 export default function PaymentResultScreen({ route, navigation }) {
   const [orderData, setOrderData] = useState();
   const [loading, setLoading] = useState(true);
@@ -53,7 +55,7 @@ export default function PaymentResultScreen({ route, navigation }) {
     <View style={styles.container}>
       {!orderData?.status && loading ? (
         <ActivityIndicator />
-      ) : orderData?.status == 0 ? (
+      ) : orderData?.status == ORDER_STATUS.PLACED ? (
         <View style={styles.centered}>
           <LottieView
             autoPlay

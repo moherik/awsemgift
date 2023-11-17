@@ -47,7 +47,12 @@ export default function ProductDetail({
   });
 
   useEffect(() => {
-    setValue("phone", contact.selectedItem?.phoneNumbers[0].number);
+    setValue(
+      "phone",
+      contact.selectedItem?.phoneNumbers
+        ? contact.selectedItem?.phoneNumbers[0].number
+        : ""
+    );
     setValue("name", contact.selectedItem?.name);
   }, [contact.selectedItem]);
 

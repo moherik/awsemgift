@@ -22,12 +22,12 @@ import theme from "./theme/custom";
 
 import HomeScreen from "./screen/HomeScreen";
 import PaymentResultScreen from "./screen/PaymentResultScreen";
-import TopupScreen from "./screen/TopupScreen";
 import LoginScreen from "./screen/LoginScreen";
 import RegisterScreen from "./screen/RegisterScreen";
 import InboxScreen from "./screen/InboxScreen";
 import HistoryDetailScreen from "./screen/HistoryDetailScreen";
 import FavoriteScreen from "./screen/FavoriteScreen";
+import ProfileScreen from "./screen/ProfileScreen";
 import PaymentWebviewScreen from "./screen/PaymentWebviewScreen";
 
 import CustomProvider from "./components/CustomProvider";
@@ -110,9 +110,13 @@ export default function App() {
                   />
 
                   <Stack.Screen
-                    name="Topup"
-                    component={TopupScreen}
-                    options={{ title: "Topup Saldo" }}
+                    name="Profile"
+                    component={ProfileScreen}
+                    options={{
+                      title: "Profil",
+                      headerShown: false,
+                      presentation: "fullScreenModal",
+                    }}
                   />
                   <Stack.Screen
                     name="Inbox"

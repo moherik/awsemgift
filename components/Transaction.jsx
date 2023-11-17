@@ -28,6 +28,7 @@ import api from "../lib/api";
 
 import CustomBackdrop from "./CustomBackdrop";
 import ProductDetail from "./ProductDetail";
+import ProductItem from "./ProductItem";
 
 let tempData = [];
 const numColumns = 3;
@@ -59,7 +60,7 @@ export default function Transaction() {
     setLoading(true);
 
     await api
-      .get("products")
+      .post("products", { userId: auth?.userData?.id })
       .then((response) => {
         tempData = response.data?.products || [];
 
@@ -127,7 +128,7 @@ export default function Transaction() {
     setSelectedItem(selectedItem);
 
     await api
-      .post("products/favorites", {
+      .post("products/favorite", {
         productGroupId: selectedItem.id,
       })
       .then((response) => console.log(response))
@@ -195,47 +196,12 @@ export default function Transaction() {
         }
         stickyHeaderIndices={[0]}
         renderItem={({ item }) => (
-          <View style={styles.gridItem}>
-            <TouchableRipple
-              borderless
-              style={{
-                ...styles.itemWrapper,
-                borderColor: theme.colors.primaryContainer,
-              }}
-              onPress={() => handleOnClick(item)}
-            >
-              <View
-                style={{
-                  display: "flex",
-                  flex: 1,
-                  backgroundColor: theme.colors.inversePrimary,
-                }}
-              >
-                <View
-                  style={{
-                    ...styles.itemLogo,
-                    backgroundColor:
-                      item.color || theme.colors.primaryContainer,
-                  }}
-                >
-                  <Image
-                    style={{ borderRadius: 12 }}
-                    source={{ uri: item.logo }}
-                    width={cardHeight - 100}
-                    height={cardHeight - 100}
-                  />
-                </View>
-                <View style={{ paddingHorizontal: 15, paddingVertical: 10 }}>
-                  <Text variant="titleSmall" numberOfLines={1}>
-                    {item.name}
-                  </Text>
-                  <Text variant="bodySmall" numberOfLines={1}>
-                    {item.price}
-                  </Text>
-                </View>
-              </View>
-            </TouchableRipple>
-          </View>
+          <ProductItem
+            onClick={handleOnClick}
+            item={item}
+            numColumns={numColumns}
+            cardHeight={cardHeight}
+          />
         )}
         numColumns={numColumns}
         data={products}
@@ -301,26 +267,6 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     paddingLeft: 5,
     width: "100%",
-  },
-  gridItem: {
-    flex: 1 / numColumns,
-    display: "flex",
-    justifyContent: "flex-start",
-    height: cardHeight,
-  },
-  itemWrapper: {
-    flex: 1,
-    margin: 5,
-    borderRadius: 5,
-    borderWidth: 1,
-    display: "flex",
-    overflow: "hidden",
-  },
-  itemLogo: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    flex: 1,
   },
   emptyWrapper: {
     display: "flex",
