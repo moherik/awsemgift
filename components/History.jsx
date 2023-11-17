@@ -9,6 +9,7 @@ import { dateFormat } from "../lib/formatter";
 
 import LoginBanner from "./LoginBanner";
 import { giftStatus } from "../constants";
+import EmptyBanner from "./EmptyBanner";
 
 export default function History() {
   const [gifts, setGifts] = useState([]);
@@ -108,6 +109,7 @@ export default function History() {
             onPress={() => navigation.navigate("GiftDetail", { item: item })}
           />
         )}
+        ListEmptyComponent={!loading && <EmptyBanner />}
       />
     </>
   );

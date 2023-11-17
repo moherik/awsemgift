@@ -4,6 +4,7 @@ import { List, Text } from "react-native-paper";
 import Toast from "react-native-root-toast";
 
 import api from "../lib/api";
+import EmptyBanner from "../components/EmptyBanner";
 
 export default function FavoriteScreen({ route, navigation }) {
   const [favorites, setFavorites] = useState([]);
@@ -50,6 +51,7 @@ export default function FavoriteScreen({ route, navigation }) {
           onPress={() => navigation.navigate("GiftDetail", { item: item })}
         />
       )}
+      ListEmptyComponent={!loading && <EmptyBanner />}
     />
   );
 }

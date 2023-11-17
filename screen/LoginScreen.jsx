@@ -157,7 +157,7 @@ export default function LoginScreen() {
                 value={value}
                 onBlur={onBlur}
                 onChangeText={onChange}
-                left={<TextInput.Icon icon="email" />}
+                left={<TextInput.Icon icon="email-outline" />}
               />
             )}
           />
@@ -174,7 +174,7 @@ export default function LoginScreen() {
                 value={value}
                 onBlur={onBlur}
                 onChangeText={onChange}
-                left={<TextInput.Icon icon="key" />}
+                left={<TextInput.Icon icon="key-outline" />}
                 right={
                   <TextInput.Icon
                     icon={!showPassword ? "eye-outline" : "eye-off-outline"}

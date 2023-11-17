@@ -24,6 +24,11 @@ export default function ProfileScreen({ route, navigation }) {
     ]);
   }
 
+  function getNameTag(name) {
+    const arrName = name?.split(" ");
+    return arrName.map((val, index) => (index <= 1 ? val[0] : "")).join("");
+  }
+
   async function deleteAccount() {
     try {
       showLoader();
@@ -53,7 +58,7 @@ export default function ProfileScreen({ route, navigation }) {
         {data?.avatarUrl ? (
           <Avatar.Image source={{ uri: data?.avatarUrl }} size={80} />
         ) : (
-          <Avatar.Text label={data.name} />
+          <Avatar.Text label={getNameTag(data.name)} />
         )}
         <View style={styles.centered}>
           <Text variant="titleMedium">{data.name}</Text>
