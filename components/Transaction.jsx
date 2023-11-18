@@ -5,6 +5,7 @@ import {
   Image,
   Keyboard,
   ScrollView,
+  SectionList,
   StyleSheet,
   View,
 } from "react-native";
@@ -145,7 +146,7 @@ export default function Transaction() {
         <Appbar.Content title="AwsemGift" />
         <Appbar.Action icon="bell-outline" onPress={() => {}} />
       </Appbar.Header>
-      <FlatList
+      <SectionList
         refreshing={loading}
         onRefresh={() => fetchData()}
         keyExtractor={(item) => item.id}
@@ -196,16 +197,25 @@ export default function Transaction() {
         }
         stickyHeaderIndices={[0]}
         renderItem={({ item }) => (
-          <ProductItem
-            onClick={handleOnClick}
-            item={item}
+          <FlatList
+            data={item}
             numColumns={numColumns}
-            cardHeight={cardHeight}
+            renderItem={({ subitem }) => (
+              <ProductItem
+                onClick={handleOnClick}
+                item={subitem}
+                numColumns={numColumns}
+                cardHeight={cardHeight}
+              />
+            )}
           />
         )}
-        numColumns={numColumns}
-        data={products}
-        keyboardShouldPersistTaps="handled"
+        renderSectionHeader={({ section }) => (
+          <Text style={{ paddingHorizontal: 10, paddingVertical: 10 }}>
+            {section.title}
+          </Text>
+        )}
+        sections={products}
         ListEmptyComponent={
           !loading && (
             <View style={styles.emptyWrapper}>
