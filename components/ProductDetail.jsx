@@ -1,5 +1,12 @@
 import { useEffect, useState } from "react";
-import { BackHandler, FlatList, Image, StyleSheet, View } from "react-native";
+import {
+  BackHandler,
+  FlatList,
+  Image,
+  StyleSheet,
+  View,
+  useWindowDimensions,
+} from "react-native";
 import {
   Button,
   Divider,
@@ -12,7 +19,7 @@ import {
 } from "react-native-paper";
 import { Controller, useForm } from "react-hook-form";
 import Toast from "react-native-root-toast";
-import * as Linking from "expo-linking";
+import RenderHtml from "react-native-render-html";
 
 import LoginBanner from "./LoginBanner";
 
@@ -164,8 +171,15 @@ export default function ProductDetail({
         </View>
       </View>
       {item.info && (
-        <View style={{ paddingHorizontal: 10, paddingVertical: 10 }}>
-          <Text variant="bodySmall">{item.info}</Text>
+        <View style={{ paddingHorizontal: 10, paddingBottom: 10 }}>
+          <RenderHtml
+            baseStyle={{
+              lineHeight: 18,
+              fontSize: theme.fonts.bodySmall.fontSize,
+            }}
+            contentWidth={useWindowDimensions().width}
+            source={{ html: item.info }}
+          />
         </View>
       )}
       <Divider />

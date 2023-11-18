@@ -39,7 +39,7 @@ export default function Menu() {
       name: "Favorit",
       desc: "Produk favorit tersimpan",
       icon: "heart-multiple-outline",
-      isActive: auth.userData,
+      isActive: false,
       onClick: () => {
         navigation.navigate("Favorite");
       },
