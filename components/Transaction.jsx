@@ -58,7 +58,7 @@ export default function Transaction() {
   // variables
   const snapPoints = useMemo(() => ["80%", "96%"], []);
 
-  async function fetchData(isRefresh) {
+  async function fetchData() {
     const categories = await storage.get("categories");
     if (categories) {
       setCategories(JSON.parse(categories));
@@ -70,28 +70,26 @@ export default function Transaction() {
     }
 
     try {
-      if (isRefresh) {
-        setLoading(true);
-        setSearchText("");
-        setSelectedCategory(null);
+      setLoading(true);
+      setSearchText("");
+      setSelectedCategory(null);
 
-        const resp = await api.post("products", {
-          userId: auth?.userData?.id,
-        });
-        if (resp.status != 200 && !resp.data)
-          throw new Error("Terjadi kesalahan");
+      const resp = await api.post("products", {
+        userId: auth?.userData?.id,
+      });
+      if (resp.status != 200 && !resp.data)
+        throw new Error("Terjadi kesalahan");
 
-        if (resp.data) {
-          const productsData = resp.data?.products;
-          const categoriesData = resp.data?.categories;
+      if (resp.data) {
+        const productsData = resp.data?.products;
+        const categoriesData = resp.data?.categories;
 
-          tempData = productsData;
-          setProducts(productsData);
-          setCategories(categoriesData);
+        tempData = productsData;
+        setProducts(productsData);
+        setCategories(categoriesData);
 
-          storage.update("products", JSON.stringify(productsData));
-          storage.update("categories", JSON.stringify(categoriesData));
-        }
+        storage.update("products", JSON.stringify(productsData));
+        storage.update("categories", JSON.stringify(categoriesData));
       }
     } catch (error) {
       Toast.show(error.message || "Terjadi kesalahan");
@@ -115,29 +113,47 @@ export default function Transaction() {
       let allData = filteredData?.find((val) => val.id !== -1);
 
       if (searchText) {
-        allData.data[0] = allData?.data[0].filter((product) =>
-          product.name
-            ? product.name.toLowerCase().includes(searchText.toLowerCase())
-            : null
-        );
+        if (allData) {
+          allData.data[0] = allData?.data[0].filter((product) =>
+            product.name
+              ? product.name.toLowerCase().includes(searchText.toLowerCase())
+              : null
+          );
+        }
 
-        filteredFav.data[0] = filteredFav?.data[0].filter((product) =>
-          product.name
-            ? product.name.toLowerCase().includes(searchText.toLowerCase())
-            : null
-        );
+        if (filteredFav) {
+          filteredFav.data[0] = filteredFav?.data[0].filter((product) =>
+            product.name
+              ? product.name.toLowerCase().includes(searchText.toLowerCase())
+              : null
+          );
+        }
+
+        filteredData = [allData];
+
+        if (filteredFav) {
+          filteredData.unshift(filteredFav);
+        }
       }
 
       if (selectedCategory) {
-        allData.data[0] = allData?.data[0].filter((product) =>
-          product.category ? product.category.id == selectedCategory.id : null
-        );
+        if (allData) {
+          allData.data[0] = allData?.data[0].filter((product) =>
+            product.category ? product.category.id == selectedCategory.id : null
+          );
+        }
 
-        filteredFav.data[0] = filteredFav?.data[0].filter((product) =>
-          product.category ? product.category.id == selectedCategory.id : null
-        );
+        if (filteredFav) {
+          filteredFav.data[0] = filteredFav?.data[0].filter((product) =>
+            product.category ? product.category.id == selectedCategory.id : null
+          );
+        }
 
-        filteredData = [filteredFav, allData];
+        filteredData = [allData];
+
+        if (filteredFav) {
+          filteredData.unshift(filteredFav);
+        }
       }
 
       setProducts(filteredData);
@@ -333,7 +349,7 @@ export default function Transaction() {
 
       <SectionList
         refreshing={loading}
-        onRefresh={() => fetchData(true)}
+        onRefresh={fetchData}
         keyExtractor={(item) => item.id}
         stickyHeaderIndices={[0]}
         renderItem={renderItem}

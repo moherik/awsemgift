@@ -174,8 +174,9 @@ export default function ProductDetail({
         <View style={{ paddingHorizontal: 10, paddingBottom: 10 }}>
           <RenderHtml
             baseStyle={{
-              lineHeight: 18,
+              lineHeight: theme.fonts.bodySmall.lineHeight,
               fontSize: theme.fonts.bodySmall.fontSize,
+              color: theme.colors.inverseSurface,
             }}
             contentWidth={useWindowDimensions().width}
             source={{ html: item.info }}
