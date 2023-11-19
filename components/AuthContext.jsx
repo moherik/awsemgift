@@ -26,9 +26,9 @@ export default function AuthProvider({ children }) {
         setuserData(response.data);
       });
       return;
+    } else {
+      await signOut();
     }
-
-    setuserData(undefined);
   }
 
   async function signIn({ email, password, type = "email" }) {

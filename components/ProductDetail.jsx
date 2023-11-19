@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import {
   BackHandler,
   FlatList,
-  Image,
   StyleSheet,
   View,
   useWindowDimensions,
@@ -18,6 +17,7 @@ import {
   useTheme,
 } from "react-native-paper";
 import { Controller, useForm } from "react-hook-form";
+import { Image } from "expo-image";
 import Toast from "react-native-root-toast";
 import RenderHtml from "react-native-render-html";
 

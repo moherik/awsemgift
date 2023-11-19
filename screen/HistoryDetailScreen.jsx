@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Image, ScrollView, Share, StyleSheet, View } from "react-native";
+import { ScrollView, Share, StyleSheet, View } from "react-native";
 import {
   ActivityIndicator,
   Button,
@@ -10,6 +10,7 @@ import {
   Text,
   useTheme,
 } from "react-native-paper";
+import { Image } from "expo-image";
 import Toast from "react-native-root-toast";
 import * as Clipboard from "expo-clipboard";
 

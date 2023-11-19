@@ -1,12 +1,21 @@
-import { Image, StyleSheet, View } from "react-native";
-import { Text, TouchableRipple, useTheme } from "react-native-paper";
+import { Dimensions, StyleSheet, View } from "react-native";
+import { Text, TouchableRipple } from "react-native-paper";
+import { Image } from "expo-image";
 
-export default function ProductItem({ onClick, item, numColumns, cardHeight }) {
-  const theme = useTheme();
-
+export default function ProductItem({
+  onClick,
+  item,
+  numColumns,
+  cardHeight,
+  theme,
+}) {
   return (
     <View
-      style={{ ...styles.gridItem, flex: 1 / numColumns, height: cardHeight }}
+      style={{
+        ...styles.gridItem,
+        height: cardHeight,
+        width: Dimensions.get("screen").width / numColumns,
+      }}
     >
       <TouchableRipple
         borderless
@@ -26,22 +35,23 @@ export default function ProductItem({ onClick, item, numColumns, cardHeight }) {
           <View
             style={{
               ...styles.itemLogo,
-              backgroundColor: item.color || theme.colors.primaryContainer,
+              backgroundColor: item?.color || theme.colors.primaryContainer,
             }}
           >
             <Image
               style={{ borderRadius: 12 }}
-              source={{ uri: item.logo }}
+              source={{ uri: item?.logo }}
               width={cardHeight - 100}
               height={cardHeight - 100}
+              cachePolicy="disk"
             />
           </View>
-          <View style={{ paddingHorizontal: 15, paddingVertical: 10 }}>
+          <View style={{ paddingHorizontal: 10, paddingVertical: 8 }}>
             <Text variant="titleSmall" numberOfLines={1}>
-              {item.name}
+              {item?.name}
             </Text>
             <Text variant="bodySmall" numberOfLines={1}>
-              {item.price}
+              {item?.price}
             </Text>
           </View>
         </View>

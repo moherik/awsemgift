@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
+import { View } from "react-native";
 import { List } from "react-native-paper";
+import { Image } from "expo-image";
 
-import useAuth from "../hooks/useAuth";
 import api from "../lib/api";
 import { currency } from "../lib/formatter";
-import { View } from "react-native";
 
 export default function PaymentList({ onSelect, auth, price }) {
   const [paymentList, setPaymentList] = useState([]);

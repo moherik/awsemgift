@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
-import { FlatList, Image, View } from "react-native";
+import { FlatList, View } from "react-native";
 import { Appbar, List, Text, useTheme } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
+import { Image } from "expo-image";
 
 import api from "../lib/api";
 import useAuth from "../hooks/useAuth";
@@ -109,7 +110,7 @@ export default function History() {
             onPress={() => navigation.navigate("GiftDetail", { item: item })}
           />
         )}
-        ListEmptyComponent={!loading && <EmptyBanner />}
+        ListEmptyComponent={!loading && auth.userData ? <EmptyBanner /> : null}
       />
     </>
   );
