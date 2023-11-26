@@ -14,7 +14,11 @@ export default function PaymentList({ onSelect, auth, price }) {
   useEffect(() => {
     async function getPaymentList() {
       await api.get("general/payment-list").then((res) => {
-        setPaymentList(res.data);
+        const paymentList = res.data?.filter((val) => {
+          if (val.selected) handleSelectPayment(val.id);
+          return val.isActive;
+        });
+        setPaymentList(paymentList);
       });
     }
 
@@ -55,13 +59,13 @@ export default function PaymentList({ onSelect, auth, price }) {
             )
           }
           right={(props) =>
-            payment.id == selectedPayment && (
+            payment.id == selectedPayment ? (
               <List.Icon
                 {...props}
                 icon="check-circle"
                 color={theme.colors.primary}
               />
-            )
+            ) : null
           }
           onPress={() => handleSelectPayment(payment.id)}
         />

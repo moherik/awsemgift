@@ -1,4 +1,5 @@
-import { AppRegistry, useColorScheme } from "react-native";
+import { useEffect, useRef, useState } from "react";
+import { AppRegistry, Platform, useColorScheme } from "react-native";
 import {
   PaperProvider,
   MD3DarkTheme,
@@ -17,6 +18,8 @@ import { RootSiblingParent } from "react-native-root-siblings";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import { StatusBar } from "expo-status-bar";
+import * as Network from "expo-network";
+import Toast from "react-native-root-toast";
 
 import theme from "./theme/custom";
 
@@ -43,6 +46,19 @@ export default function App() {
   const colorScheme = useColorScheme();
 
   GoogleSignin.configure();
+
+  useEffect(() => {
+    async function checkConnection() {
+      const conn = await Network.getNetworkStateAsync();
+      if (!conn.isConnected) {
+        Toast.show("Tidak ada koneksi internet");
+      } else {
+        console.log("CONNECTED");
+      }
+    }
+
+    checkConnection();
+  });
 
   const combinedTheme =
     colorScheme === "dark"

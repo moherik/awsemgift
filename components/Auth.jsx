@@ -20,13 +20,16 @@ export default function AuthProvider({ children }) {
   }, []);
 
   async function refresh() {
-    const authToken = await getAccessToken();
-    if (authToken) {
-      await api.get("users/profile").then((response) => {
+    try {
+      const authToken = await getAccessToken();
+      if (authToken) {
+        const response = await api.get("users/profile");
         setuserData(response.data);
-      });
-      return;
-    } else {
+      } else {
+        throw new Error("UNAUTHORIZED");
+      }
+    } catch (error) {
+      console.log(error);
       await signOut();
     }
   }

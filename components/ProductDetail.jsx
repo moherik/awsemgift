@@ -98,9 +98,7 @@ export default function ProductDetail({
             throw new Error(response.message || "Gagal menambahkan hadiah");
           }
 
-          console.log(response.data);
           const { url, orderId } = response.data;
-          console.log(url, orderId);
           if (url) {
             dismissModal();
             setTimeout(() => {
@@ -237,7 +235,7 @@ export default function ProductDetail({
             <LoginBanner
               navigation={navigation}
               onClick={handleClickLogin}
-              title="Hello There,"
+              title="Tunggu Dulu,"
               message="Login untuk mengakses fitur ini"
             />
           ) : (

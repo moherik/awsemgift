@@ -3,7 +3,7 @@ import { Button, Text, useTheme } from "react-native-paper";
 import Constants from "expo-constants";
 
 export default function LoginBanner({
-  title = "Hola,",
+  title = "Selamat Datang,",
   message = "Login untuk mengakses semua fitur",
   onClick,
 }) {

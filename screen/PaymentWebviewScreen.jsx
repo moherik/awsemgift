@@ -44,7 +44,6 @@ export default function PaymentWebviewScreen({ route, navigation }) {
   }, [navigation, loading]);
 
   function openExternalLink(req) {
-    console.log(req.url);
     if (req.url.startsWith("awsemgit://")) {
       Linking.openURL(req.url);
       return false;

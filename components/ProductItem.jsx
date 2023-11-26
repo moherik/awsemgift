@@ -29,13 +29,11 @@ export default function ProductItem({
           style={{
             display: "flex",
             flex: 1,
-            backgroundColor: theme.colors.inversePrimary,
           }}
         >
           <View
             style={{
               ...styles.itemLogo,
-              backgroundColor: item?.color || theme.colors.primaryContainer,
             }}
           >
             <Image

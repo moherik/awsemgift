@@ -1,16 +1,20 @@
 import { useTheme } from "react-native-paper";
-import AuthProvider from "./AuthContext";
+
+import AuthProvider from "./Auth";
 import ContactListProvider from "./ContactListModal";
 import LoaderProvider from "./Loader";
+import NotificationProvider from "./Notification";
 
 export default function CustomProvider({ children }) {
   const theme = useTheme();
 
   return (
     <AuthProvider>
-      <ContactListProvider theme={theme}>
-        <LoaderProvider>{children}</LoaderProvider>
-      </ContactListProvider>
+      <NotificationProvider>
+        <ContactListProvider theme={theme}>
+          <LoaderProvider>{children}</LoaderProvider>
+        </ContactListProvider>
+      </NotificationProvider>
     </AuthProvider>
   );
 }

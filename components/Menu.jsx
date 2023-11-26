@@ -10,13 +10,13 @@ import {
   useTheme,
 } from "react-native-paper";
 import Constants from "expo-constants";
+import Toast from "react-native-root-toast";
 import * as WebBrowser from "expo-web-browser";
 
 import useAuth from "../hooks/useAuth";
 import { currency } from "../lib/formatter";
 
 import LoginBanner from "./LoginBanner";
-import Toast from "react-native-root-toast";
 
 export default function Menu() {
   const [loading, setLoading] = useState(false);

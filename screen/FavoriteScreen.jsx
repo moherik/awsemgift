@@ -15,7 +15,6 @@ export default function FavoriteScreen({ route, navigation }) {
 
     try {
       const resp = await api.get("products/favorite");
-      console.log(resp);
 
       setFavorites(resp.data);
     } catch (error) {
