@@ -4,6 +4,14 @@ import * as Notifications from "expo-notifications";
 import api from "../lib/api";
 import useAuth from "../hooks/useAuth";
 
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: false,
+    shouldSetBadge: false,
+  }),
+});
+
 export const NotificationContext = createContext({});
 
 export default function NotificationProvider({ children }) {
